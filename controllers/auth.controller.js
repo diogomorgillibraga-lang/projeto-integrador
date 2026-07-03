@@ -82,11 +82,16 @@ export const login = async (req, res) => {
       })
     }
 
-    const [usuarios] = await pool.query(
-      'SELECT * FROM usuarios WHERE email = ?',
+    // MUDANÇA 1: Trocamos o ? por $1 para o PostgreSQL
+    const resultadoBusca = await pool.query(
+      'SELECT * FROM usuarios WHERE email = $1',
       [email]
     )
 
+    // MUDANÇA 2: Pegamos a lista de usuários de dentro de .rows
+    const usuarios = resultadoBusca.rows
+
+    // Se a lista estiver vazia, o usuário não existe
     if (!usuarios.length) {
       return res.status(401).json({
         erro: 'Usuário ou senha incorretos'
@@ -136,6 +141,7 @@ export const login = async (req, res) => {
 
   }
 }
+
 export const cadastrar = async (req, res) => {
   try {
 
