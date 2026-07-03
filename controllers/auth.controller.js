@@ -157,18 +157,22 @@ const valoresCadastro = [nome, email, senha, telefone, tipo_interesse];
 // Executamos usando o .query (e não .execute)
 await pool.query(queryCadastro, valoresCadastro);
 
-    if (usuarioExiste.length > 0) {
-      return res.status(400).json({
-        erro: 'Email já cadastrado'
-      })
-    }
+const resultadoBusca = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+
+// 2. Criamos a variável que o seu código precisa para a validação (lendo as linhas retornadas)
+const usuarioExiste = resultadoBusca.rows;
+
+// 3. Se o array tiver algum usuário dentro, significa que o e-mail já existe
+if (usuarioExiste.length > 0) {
+  return res.status(400).json({ erro: 'Este e-mail já está cadastrado!' });
+}
 
     const senhaHash = await gerarHashSenha(senha)
 
-    await pool.execute(
+    await pool.query(
       `INSERT INTO usuarios
       (nome, email, senha, telefone, adm, tipo_interesse)
-      VALUES (?, ?, ?, ?, ?, ?)`,
+      VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         nome,
         email,
