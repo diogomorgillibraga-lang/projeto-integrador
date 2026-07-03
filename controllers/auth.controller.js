@@ -149,10 +149,13 @@ export const cadastrar = async (req, res) => {
     
     } = req.body
 
-    const [usuarioExiste] = await pool.query(
-      'SELECT id FROM usuarios WHERE email = ?',
-      [email]
-    )
+    // FORMATO CORRETO PARA O NEON (POSTGRESQL)
+// Note que usamos $1, $2, $3, $4, $5 em vez de pontos de interrogação (?)
+const queryCadastro = 'INSERT INTO usuarios (nome, email, senha, telefone, tipo_interesse) VALUES ($1, $2, $3, $4, $5)';
+const valoresCadastro = [nome, email, senha, telefone, tipo_interesse];
+
+// Executamos usando o .query (e não .execute)
+await pool.query(queryCadastro, valoresCadastro);
 
     if (usuarioExiste.length > 0) {
       return res.status(400).json({
