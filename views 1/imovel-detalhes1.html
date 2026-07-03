@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalhes do Imóvel - IBV Bela Vista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  /* ────────────────────────────────────────────
+     VARIÁVEIS DE COR
+  ──────────────────────────────────────────── */
+  :root {
+    --ibv-red: #C0392B;
+    --ibv-red-light: #E74C3C;
+    --ibv-red-dark: #922B21;
+    --ibv-navy: #1A2744;
+    --ibv-navy-dark: #0F1A2E;
+  }
+  [data-theme="dark"] {
+    --bg-primary: #0D1421;
+    --bg-secondary: #131D30;
+    --bg-card: #1A2744;
+    --bg-card-hover: #1E2E50;
+    --text-primary: #F0F4FF;
+    --text-secondary: #9AABC9;
+    --text-muted: #607090;
+    --border: rgba(144,168,220,0.12);
+    --border-strong: rgba(144,168,220,0.25);
+    --nav-bg: rgba(13,20,33,0.92);
+    --input-bg: rgba(26,39,68,0.8);
+    --btn-secondary-bg: rgba(26,39,68,0.6);
+    --section-alt: #0F1A2E;
+    --footer-bg: #080E1A;
+    --shadow: 0 8px 32px rgba(0,0,0,0.5);
+    --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  [data-theme="light"] {
+    --bg-primary: #F5F7FC;
+    --bg-secondary: #EEF1FA;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F0F4FF;
+    --text-primary: #0F1A2E;
+    --text-secondary: #3A4F72;
+    --text-muted: #7A8FAB;
+    --border: rgba(26,39,100,0.1);
+    --border-strong: rgba(26,39,100,0.2);
+    --nav-bg: rgba(245,247,252,0.95);
+    --input-bg: rgba(238,241,250,0.9);
+    --btn-secondary-bg: rgba(255,255,255,0.8);
+    --section-alt: #EAEEF8;
+    --footer-bg: #0F1A2E;
+    --shadow: 0 8px 32px rgba(26,39,100,0.12);
+    --shadow-card: 0 4px 24px rgba(26,39,100,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.3s;
+    overflow-x: hidden;
+  }
+
+  /* ────────────────────────────────────────────
+     NAVBAR
+  ──────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); transition: background 0.3s;
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; height: 70px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
+  .logo-icon {
+    width: 50px; height: 40px; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; background: #fff; border-radius: 6px; padding: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
+  .logo-text strong { display: block; font-size: 15px; font-weight: 700; }
+  .logo-text span { display: block; font-size: 11px; color: var(--text-secondary); }
+  .nav-links { display: flex; align-items: center; gap: 0.25rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 14px; font-weight: 500; padding: 0.5rem 0.9rem;
+    border-radius: 8px; transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--text-primary); background: var(--border); }
+  .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+  .theme-toggle {
+    width: 44px; height: 24px; background: var(--border-strong);
+    border-radius: 12px; border: none; cursor: pointer;
+    position: relative; transition: background 0.3s; padding: 0;
+  }
+  .theme-toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--ibv-red); transition: transform 0.3s;
+  }
+  [data-theme="light"] .theme-toggle::after { transform: translateX(20px); }
+  .theme-icon {
+    position: absolute; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; pointer-events: none; top: 0; left: 0; gap: 4px;
+  }
+  .theme-icon span:first-child { margin-left: 4px; }
+  .theme-icon span:last-child { margin-right: 4px; }
+  .btn-cta {
+    background: var(--ibv-red); color: #fff;
+    border: none; padding: 0.5rem 1.1rem;
+    border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.15s; white-space: nowrap;
+  }
+  .btn-cta:hover { background: var(--ibv-red-light); transform: translateY(-1px); }
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--text-primary); border-radius: 2px;
+  }
+
+  /* ────────────────────────────────────────────
+     CONTEÚDO PRINCIPAL
+  ──────────────────────────────────────────── */
+  main { padding-top: 70px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .breadcrumb {
+    display: flex; gap: 0.5rem; margin-bottom: 2rem;
+    font-size: 13px; color: var(--text-secondary); flex-wrap: wrap;
+  }
+  .breadcrumb a { color: var(--ibv-red); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span { color: var(--text-muted); }
+
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .gallery-section { display: flex; flex-direction: column; gap: 1rem; }
+  .main-image {
+    width: 100%; aspect-ratio: 16 / 10;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .main-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .thumbnail-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .thumbnail {
+    aspect-ratio: 1;
+    background: var(--bg-card); border: 2px solid var(--border);
+    border-radius: 8px; cursor: pointer; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .thumbnail:hover { border-color: var(--ibv-red); transform: scale(1.05); }
+  .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+  .thumbnail.active { border-color: var(--ibv-red); }
+
+  .product-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .product-header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+  .product-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .product-location { font-size: 14px; color: var(--text-secondary); margin-bottom: 1rem; }
+  .product-rating { display: flex; align-items: center; gap: 0.5rem; font-size: 13px; color: var(--text-secondary); }
+  .stars { color: #FFB800; }
+
+  .price-section {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+  }
+  .price-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+  .price-value { font-size: 32px; font-weight: 700; color: var(--ibv-red); margin-bottom: 0.5rem; }
+  .price-info { font-size: 13px; color: var(--text-secondary); }
+
+  .features-section {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+  }
+  .features-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; }
+  .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .feature-item { display: flex; align-items: center; gap: 0.75rem; font-size: 14px; color: var(--text-secondary); }
+  .feature-icon { font-size: 20px; }
+
+  .action-buttons { display: flex; gap: 1rem; flex-direction: column; }
+  .btn-whatsapp {
+    background: #25D366; color: #fff; border: none;
+    padding: 1rem; border-radius: 8px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    text-decoration: none;
+  }
+  .btn-whatsapp:hover { background: #1ead4f; transform: translateY(-2px); }
+  .btn-favorite {
+    background: var(--btn-secondary-bg); color: var(--text-primary);
+    border: 1px solid var(--border-strong); padding: 1rem;
+    border-radius: 8px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, color 0.2s;
+  }
+  .btn-favorite:hover { background: var(--ibv-red); color: #fff; border-color: var(--ibv-red); }
+
+  .description-section {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;
+  }
+  .description-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; }
+  .description-text { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+
+  .similar-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem; }
+  .similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+
+  .similar-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s; cursor: pointer;
+    text-decoration: none; display: block; color: inherit;
+  }
+  .similar-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-card); }
+  .similar-image {
+    width: 100%; aspect-ratio: 16 / 10;
+    overflow: hidden; background: var(--section-alt);
+  }
+  .similar-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .similar-body { padding: 1rem; }
+  .similar-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .similar-location { font-size: 12px; color: var(--text-muted); margin-bottom: 0.75rem; }
+  .similar-price { font-size: 16px; font-weight: 700; color: var(--ibv-red); margin-bottom: 0.75rem; }
+  .similar-features { display: flex; gap: 0.5rem; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); }
+
+  .loading-state {
+    text-align: center; padding: 4rem 1.5rem;
+    color: var(--text-secondary); font-size: 16px;
+  }
+
+  footer {
+    background: var(--footer-bg); padding: 2rem 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center; font-size: 13px; color: rgba(240,244,255,0.3);
+  }
+  footer a { color: rgba(240,244,255,0.45); text-decoration: none; }
+  footer a:hover { color: var(--ibv-red-light); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 70px; left: 0; right: 0;
+    background: var(--nav-bg); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem; z-index: 999; flex-direction: column; gap: 0.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 15px; font-weight: 500; padding: 0.65rem 0.75rem;
+    border-radius: 8px; transition: background 0.2s, color 0.2s;
+  }
+  .mobile-menu a:hover { background: var(--border); color: var(--text-primary); }
+
+  @media (max-width: 768px) {
+    .nav-links, .nav-actions .btn-cta { display: none; }
+    .hamburger { display: flex; }
+    .product-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+    .thumbnail-gallery { grid-template-columns: repeat(3, 1fr); }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 1rem; }
+    .product-title { font-size: 20px; }
+    .price-value { font-size: 24px; }
+    .thumbnail-gallery { grid-template-columns: repeat(2, 1fr); }
+    .similar-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><img src="logo.png" alt="IBV Logo"></div>
+      <div class="logo-text">
+        <strong>Bela Vista</strong>
+        <span>Imobiliária · Itajobi-SP</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#imoveis">Imóveis</a></li>
+      <li><a href="index.html#sobre">Empresa</a></li>
+      <li><a href="index.html#contato">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">
+        <span class="theme-icon"><span>🌙</span><span>☀️</span></span>
+      </button>
+      <a href="cadastro.html" class="btn-cta">Cadastrar</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Início</a>
+  <a href="index.html#imoveis">Imóveis</a>
+  <a href="index.html#sobre">Empresa</a>
+  <a href="index.html#contato">Contato</a>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<main>
+  <div class="container">
+    <div class="loading-state" id="loadingState">Carregando imóvel...</div>
+
+    <div id="pageContent" style="display:none;">
+
+      <div class="breadcrumb">
+        <a href="index.html">Início</a>
+        <span>/</span>
+        <a href="index.html#imoveis">Imóveis</a>
+        <span>/</span>
+        <span id="breadcrumbNome"></span>
+      </div>
+
+      <div class="product-layout">
+
+        <div class="gallery-section">
+          <div class="main-image">
+            <img id="mainImage" src="" alt="">
+          </div>
+          <div class="thumbnail-gallery" id="thumbnailGallery"></div>
+        </div>
+
+        <div class="product-info">
+          <div class="product-header">
+            <h1 class="product-title" id="imovelTitulo"></h1>
+            <p class="product-location" id="imovelLocalizacao"></p>
+            <div class="product-rating">
+              <span class="stars">★★★★★</span>
+              <span>(avaliações de clientes)</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price-label">Preço</div>
+            <div class="price-value" id="imovelPreco"></div>
+            <div class="price-info" id="imovelCondicao"></div>
+          </div>
+
+          <div class="features-section">
+            <h3 class="features-title">Características</h3>
+            <div class="features-grid" id="featuresGrid"></div>
+          </div>
+
+          <div class="action-buttons">
+            <a id="btnWhatsapp" href="#" class="btn-whatsapp" target="_blank">
+              💬 Fale conosco no WhatsApp
+            </a>
+            <button class="btn-favorite" onclick="toggleFavorite(this)">
+              ❤️ Adicionar aos Favoritos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="description-section">
+        <h2 class="description-title">Descrição do Imóvel</h2>
+        <p class="description-text" id="imovelDescricao"></p>
+      </div>
+
+      <div class="similar-section">
+        <h2 class="section-title">Imóveis Similares</h2>
+        <div class="similar-grid" id="similarGrid"></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2024 Bela Vista Imobiliária. Todos os direitos reservados.</p>
+  <p><a href="#">Privacidade</a> | <a href="#">Termos</a> | <a href="#">Contato</a></p>
+</footer>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+  // ─────────────────────────────────────────
+  // BANCO DE DADOS DOS IMÓVEIS (DADOS REAIS)
+  // ─────────────────────────────────────────
+  const imoveis = [
+    {
+      id: 1,
+      titulo: "Casa no Centro com 3 Quartos",
+      localizacao: "📍 Centro, Itajobi - SP",
+      tipo: "Casa",
+      operacao: "Venda",
+      preco: "R$ 350.000",
+      condicao: "À vista ou financiado em até 30x",
+      imagemPrincipal: "casa-centro.jpg",
+      miniaturas: ["casa-centro-1.jpg", "casa-centro-2.jpg", "casa-centro-3.jpg", "casa-centro-4.jpg"],
+      caracteristicas: [
+        { icone: "🏠", texto: "3 Quartos (1 suíte)" },
+        { icone: "🚿", texto: "2 Banheiros" },
+        { icone: "🚗", texto: "2 Vagas cobertas" },
+        { icone: "📐", texto: "180 m²" },
+        { icone: "🏗️", texto: "Construção 2018" },
+        { icone: "✅", texto: "Escriturado" }
+      ],
+      descricao: "Excelente casa no coração de Itajobi! Com 3 quartos sendo 1 suíte, sala ampla com pé-direito duplo, cozinha planejada com ilha, área de serviço e quintal com churrasqueira. Terreno de 180m² com 2 vagas de garagem cobertas. Imóvel com acabamento de alto padrão, piso porcelanato, aço inox e vidros temperados. Localização privilegiada: a 2 quadras da Praça Central, próximo a supermercados, escolas e hospital. Documentação regular para financiamento."
+    },
+    {
+      id: 2,
+      titulo: "Terreno na Vila Nova - 300m²",
+      localizacao: "📍 Vila Nova, Itajobi - SP",
+      tipo: "Terreno",
+      operacao: "Venda",
+      preco: "R$ 93.000",
+      condicao: "À vista ou parcelado",
+      imagemPrincipal: "terreno-vila-nova.jpg",
+      miniaturas: ["terreno-vila-nova.jpg"],
+      caracteristicas: [
+        { icone: "📐", texto: "300 m²" },
+        { icone: "📏", texto: "Esquina (12x25m)" },
+        { icone: "✅", texto: "Escriturado" },
+        { icone: "🏙️", texto: "Água e Luz na rua" },
+        { icone: "🛣️", texto: "Rua Asfaltada" },
+        { icone: "📍", texto: "Próx. à UBS" }
+      ],
+      descricao: "Ótimo terreno de esquina na Vila Nova, bairro em crescimento em Itajobi. Com 12 metros de frente por 25 metros de fundos, totalizando 300m². Terreno plano e com boa topografia, ideal para construção de casa térrea ou sobrado. Infraestrutura completa: água, energia elétrica, esgoto e rua asfaltada. Localização estratégica próxima à UBS (Unidade Básica de Saúde), escola municipal e comércio local. Escriturado e com matrícula atualizada. Excelente investimento para construção própria ou especulação."
+    },
+    {
+      id: 3,
+      titulo: "Casa no Jardim São Paulo",
+      localizacao: "📍 Jd. São Paulo, Itajobi - SP",
+      tipo: "Casa",
+      operacao: "Venda",
+      preco: "R$ 250.000",
+      condicao: "À vista ou financiado",
+      imagemPrincipal: "casa-jardim-sp.jpg",
+      miniaturas: ["casa-jdsp-1.jpg", "casa-jdsp-2.jpg", "casa-jdsp-3.jpg", "casa-jdsp-4.jpg"],
+      caracteristicas: [
+        { icone: "🏠", texto: "2 Quartos" },
+        { icone: "🚿", texto: "1 Banheiro" },
+        { icone: "🚗", texto: "1 Vaga" },
+        { icone: "📐", texto: "120 m²" },
+        { icone: "🏡", texto: "Construção 2015" },
+        { icone: "🌿", texto: "Quintal com árvores" }
+      ],
+      descricao: "Casa acolhedora no Jardim São Paulo, bairro residencial tranquilo de Itajobi. Com 2 quartos, sala de estar e jantar integradas, cozinha com armários planejados e banheiro social. Terreno de 120m² com área de lazer externa e quintal arborizado. Imóvel bem conservado, com pintura recente e telhado revisado. Localização silenciosa e familiar, a poucos metros de praça pública e linha de ônibus. Ótima oportunidade para quem busca conforto com preço acessível."
+    },
+    {
+      id: 4,
+      titulo: "Casa para Alugar - 3 Quartos",
+      localizacao: "📍 Jardim das Flores, Itajobi - SP",
+      tipo: "Casa",
+      operacao: "Aluguel",
+      preco: "R$ 1.700",
+      condicao: "Por mês (condomínio não incluso)",
+      imagemPrincipal: "chacara-luxo.jpg",
+      miniaturas: ["casa-alugar-1.jpg", "casa-alugar-2.jpg", "casa-alugar-3.jpg", "casa-alugar-4.jpg"],
+      caracteristicas: [
+        { icone: "🏠", texto: "3 Quartos" },
+        { icone: "🚿", texto: "2 Banheiros" },
+        { icone: "🚗", texto: "1 Vaga" },
+        { icone: "📐", texto: "130 m²" },
+        { icone: "🏫", texto: "Próx. à Escola" },
+        { icone: "🔒", texto: "Segurança 24h" }
+      ],
+      descricao: "Casa térrea ampla no Jardim das Flores, um dos melhores bairros de Itajobi. 3 quartos sendo 1 com armário embutido, 2 banheiros completos, sala de estar e jantar, cozinha com copa e área de serviço. Terreno de 130m² com garagem para 1 carro e quintal nos fundos. Localização excepcional: a 150 metros da Escola Estadual, próxima a padaria, farmácia e supermercado. Bairro familiar com baixo índice de criminalidade. Disponível para mudança imediata, com contrato de aluguel de 12 meses."
+    },
+    {
+      id: 5,
+      titulo: "Chácara de Luxo com Piscina",
+      localizacao: "📍 Zona Rural, Itajobi - SP",
+      tipo: "Chácara",
+      operacao: "Venda",
+      preco: "R$ 1.300.000",
+      condicao: "Negociável (aceita permuta)",
+      imagemPrincipal: "comercial-centro.jpg",
+      miniaturas: ["chacara-1.jpg", "chacara-2.jpg", "chacara-3.jpg", "chacara-4.jpg"],
+      caracteristicas: [
+        { icone: "🏠", texto: "4 Quartos (2 suítes)" },
+        { icone: "🚿", texto: "3 Banheiros" },
+        { icone: "🏊", texto: "Piscina aquecida" },
+        { icone: "📐", texto: "5.000 m²" },
+        { icone: "🌳", texto: "Jardim paisagístico" },
+        { icone: "🏌️", texto: "Campo de futebol" }
+      ],
+      descricao: "Chácara de alto padrão na zona rural de Itajobi, a apenas 8km do centro. Propriedade com 5.000m² totalmente cercada, com 4 quartos sendo 2 suítes, 3 banheiros, sala de estar com lareira, sala de jantar, cozinha gourmet com churrasqueira e adega. Área de lazer completa: piscina aquecida com cascata, sauna, academia, campo de futebol society, pomar com frutas cítricas e horta orgânica. Estacionamento coberto para 6 carros. Casa com acabamento premium, sistemas de segurança e automação. Energia solar e poço artesiano. Lugar paradisíaco para quem busca qualidade de vida e contato com a natureza."
+    },
+    {
+      id: 6,
+      titulo: "Ponto Comercial no Centro",
+      localizacao: "📍 Centro, Itajobi - SP",
+      tipo: "Comercial",
+      operacao: "Venda",
+      preco: "Consulte",
+      condicao: "Preço sob consulta",
+      imagemPrincipal: "ponto-centro.jpg",
+      miniaturas: ["comercial-1.jpg", "ponto-centro.jpg", "chacara-2.jpg", "casa-jdsp-1.jpg"],
+      caracteristicas: [
+        { icone: "🏢", texto: "2 Salas" },
+        { icone: "🚿", texto: "1 Banheiro" }, 
+        { icone: "📍", texto: "Vitrine principal" },
+        { icone: "📐", texto: "80 m²" },
+        { icone: "💡", texto: "Iluminação especial" },
+        { icone: "🅿️", texto: "Estacionamento público" }
+      ],
+      descricao: "Excelente ponto comercial no coração do Centro de Itajobi, com fachada de 6 metros e vitrine voltada para a rua principal. Sala ampla com pé-direito alto, mezanino para escritório, banheiro com acessibilidade, depósito nos fundos e cozinha. Imóvel com infraestrutura completa: ar-condicionado, sistema de alarme, internet de alta velocidade e piso porcelanato. Localização de alto fluxo de pedestres e veículos, ideal para: consultórios, lojas de roupas, cafeterias, escritórios de advocacia, imobiliárias, salões de beleza. Possibilidade de aluguel também - consulte condições."
+    }
+  ];
+
+  // ─────────────────────────────────────────
+  // LEITURA DO PARÂMETRO ?id= NA URL
+  // ─────────────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const idAtual = parseInt(params.get('id')) || 1;
+
+  const imovel = imoveis.find(i => i.id === idAtual);
+
+  // ─────────────────────────────────────────
+  // PREENCHIMENTO DA PÁGINA
+  // ─────────────────────────────────────────
+  if (imovel) {
+    document.title = `${imovel.titulo} - IBV Bela Vista`;
+
+    document.getElementById('breadcrumbNome').textContent = imovel.titulo;
+
+    const mainImg = document.getElementById('mainImage');
+    mainImg.src = imovel.imagemPrincipal;
+    mainImg.alt = imovel.titulo;
+
+    const thumbContainer = document.getElementById('thumbnailGallery');
+    imovel.miniaturas.forEach((src, index) => {
+      const div = document.createElement('div');
+      div.className = 'thumbnail' + (index === 0 ? ' active' : '');
+      div.onclick = () => {
+        document.getElementById('mainImage').src = src;
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        div.classList.add('active');
+      };
+      div.innerHTML = `<img src="${src}" alt="Foto ${index + 1} de ${imovel.titulo}">`;
+      thumbContainer.appendChild(div);
+    });
+
+    document.getElementById('imovelTitulo').textContent = imovel.titulo;
+    document.getElementById('imovelLocalizacao').textContent = imovel.localizacao;
+    document.getElementById('imovelPreco').textContent = imovel.preco;
+    document.getElementById('imovelCondicao').textContent = imovel.condicao;
+    document.getElementById('imovelDescricao').textContent = imovel.descricao;
+
+    const featGrid = document.getElementById('featuresGrid');
+    imovel.caracteristicas.forEach(f => {
+      const div = document.createElement('div');
+      div.className = 'feature-item';
+      div.innerHTML = `<span class="feature-icon">${f.icone}</span><span>${f.texto}</span>`;
+      featGrid.appendChild(div);
+    });
+
+    const msgWpp = encodeURIComponent(`Olá! Tenho interesse no imóvel: ${imovel.titulo}. Pode me passar mais informações?`);
+    document.getElementById('btnWhatsapp').href = `https://wa.me/5517997078440?text=${msgWpp}`;
+
+    // Imóveis Similares
+    const similares = imoveis
+      .filter(i => i.id !== idAtual)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
+    const simGrid = document.getElementById('similarGrid');
+    similares.forEach(s => {
+      const a = document.createElement('a');
+      a.href = `imovel-detalhes.html?id=${s.id}`;
+      a.className = 'similar-card';
+      a.innerHTML = `
+        <div class="similar-image">
+          <img src="${s.imagemPrincipal}" alt="${s.titulo}">
+        </div>
+        <div class="similar-body">
+          <h3 class="similar-title">${s.titulo}</h3>
+          <p class="similar-location">${s.localizacao}</p>
+          <p class="similar-price">${s.preco}</p>
+          <div class="similar-features">
+            ${s.caracteristicas.slice(0, 3).map(f => `<span>${f.icone} ${f.texto}</span>`).join('')}
+          </div>
+        </div>
+      `;
+      simGrid.appendChild(a);
+    });
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('pageContent').style.display = 'block';
+
+  } else {
+    document.getElementById('loadingState').textContent =
+      'Imóvel não encontrado. Volte para a lista de imóveis.';
+  }
+
+  // ─────────────────────────────────────────
+  // TROCA DE IMAGEM NA GALERIA
+  // ─────────────────────────────────────────
+  function trocarImagem(thumbnail, src) {
+    document.getElementById('mainImage').src = src;
+    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+    thumbnail.classList.add('active');
+  }
+
+  // ─────────────────────────────────────────
+  // BOTÃO FAVORITAR
+  // ─────────────────────────────────────────
+  function toggleFavorite(btn) {
+    const favs = JSON.parse(localStorage.getItem('favoritos') || '[]');
+    const idx = favs.indexOf(idAtual);
+
+    if (idx === -1) {
+      favs.push(idAtual);
+      btn.textContent = '❤️ Adicionado aos Favoritos';
+      btn.style.background = 'var(--ibv-red)';
+      btn.style.color = '#fff';
+      btn.style.borderColor = 'var(--ibv-red)';
+    } else {
+      favs.splice(idx, 1);
+      btn.textContent = '❤️ Adicionar aos Favoritos';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+    localStorage.setItem('favoritos', JSON.stringify(favs));
+  }
+
+  // ─────────────────────────────────────────
+  // TEMA (claro / escuro)
+  // ─────────────────────────────────────────
+  const htmlEl = document.documentElement;
+  htmlEl.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const novo = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    htmlEl.setAttribute('data-theme', novo);
+    localStorage.setItem('theme', novo);
+  });
+
+  // ─────────────────────────────────────────
+  // MENU MOBILE
+  // ─────────────────────────────────────────
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

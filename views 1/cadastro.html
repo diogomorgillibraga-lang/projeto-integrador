@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cadastro - Imobiliária Bela Vista | Itajobi - SP">
+<meta name="keywords" content="cadastro, imobiliária, Itajobi, imóveis">
+<title>Cadastro - IBV Bela Vista | Itajobi - SP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ibv-red: #C0392B;
+    --ibv-red-light: #E74C3C;
+    --ibv-red-dark: #922B21;
+    --ibv-navy: #1A2744;
+    --ibv-navy-light: #243563;
+    --ibv-navy-dark: #0F1A2E;
+  }
+  [data-theme="dark"] {
+    --bg-primary: #0D1421;
+    --bg-secondary: #131D30;
+    --bg-card: #1A2744;
+    --bg-card-hover: #1E2E50;
+    --text-primary: #F0F4FF;
+    --text-secondary: #9AABC9;
+    --text-muted: #607090;
+    --border: rgba(144,168,220,0.12);
+    --border-strong: rgba(144,168,220,0.25);
+    --nav-bg: rgba(13,20,33,0.92);
+    --hero-overlay: rgba(13,20,33,0.75);
+    --search-bg: rgba(19,29,48,0.95);
+    --input-bg: rgba(26,39,68,0.8);
+    --badge-sold-bg: #922B21;
+    --badge-sold-text: #FFD6D2;
+    --badge-rent-bg: #1A5276;
+    --badge-rent-text: #D6EAF8;
+    --btn-secondary-bg: rgba(26,39,68,0.6);
+    --section-alt: #0F1A2E;
+    --footer-bg: #080E1A;
+    --shadow: 0 8px 32px rgba(0,0,0,0.5);
+    --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  [data-theme="light"] {
+    --bg-primary: #F5F7FC;
+    --bg-secondary: #EEF1FA;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F0F4FF;
+    --text-primary: #0F1A2E;
+    --text-secondary: #3A4F72;
+    --text-muted: #7A8FAB;
+    --border: rgba(26,39,100,0.1);
+    --border-strong: rgba(26,39,100,0.2);
+    --nav-bg: rgba(245,247,252,0.95);
+    --hero-overlay: rgba(10,18,40,0.65);
+    --search-bg: rgba(255,255,255,0.97);
+    --input-bg: rgba(238,241,250,0.9);
+    --badge-sold-bg: #F5B7B1;
+    --badge-sold-text: #7B241C;
+    --badge-rent-bg: #AED6F1;
+    --badge-rent-text: #1A5276;
+    --btn-secondary-bg: rgba(255,255,255,0.8);
+    --section-alt: #EAEEF8;
+    --footer-bg: #0F1A2E;
+    --shadow: 0 8px 32px rgba(26,39,100,0.12);
+    --shadow-card: 0 4px 24px rgba(26,39,100,0.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.3s;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; height: 70px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text-primary);
+  }
+  .logo-icon {
+    width: 50px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 6px;
+    padding: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .logo-text { line-height: 1.1; }
+  .logo-text strong { display: block; font-size: 15px; font-weight: 700; }
+  .logo-text span { display: block; font-size: 11px; color: var(--text-secondary); font-weight: 400; }
+  .nav-links {
+    display: flex; align-items: center; gap: 0.25rem; list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 14px; font-weight: 500; padding: 0.5rem 0.9rem;
+    border-radius: 8px; transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--text-primary); background: var(--border);
+  }
+  .nav-links a.active { color: var(--ibv-red); }
+  .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+  .theme-toggle {
+    width: 44px; height: 24px; background: var(--border-strong);
+    border-radius: 12px; border: none; cursor: pointer;
+    position: relative; transition: background 0.3s; padding: 0;
+  }
+  .theme-toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--ibv-red);
+    transition: transform 0.3s;
+  }
+  [data-theme="light"] .theme-toggle::after { transform: translateX(20px); }
+  .theme-icon {
+    position: absolute; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; pointer-events: none; top: 0; left: 0;
+    gap: 4px;
+  }
+  .theme-icon span:first-child { margin-left: 4px; }
+  .theme-icon span:last-child { margin-right: 4px; }
+  .btn-cta {
+    background: var(--ibv-red); color: #fff;
+    border: none; padding: 0.5rem 1.1rem;
+    border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .btn-cta:hover { background: var(--ibv-red-light); transform: translateY(-1px); }
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--text-primary); border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 70px 1.5rem 2rem;
+    background: linear-gradient(135deg, var(--ibv-navy-dark) 0%, #1A1A3A 50%, #2D1520 100%);
+  }
+  .register-container {
+    width: 100%; max-width: 500px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow);
+  }
+  .register-header {
+    text-align: center; margin-bottom: 2rem;
+  }
+  .register-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 800;
+    color: var(--text-primary); margin-bottom: 0.5rem;
+  }
+  .register-header p {
+    font-size: 14px; color: var(--text-secondary);
+  }
+
+  /* ── FORM ── */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-group label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--text-primary); margin-bottom: 0.5rem;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, background 0.3s;
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--text-muted);
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--ibv-red);
+    background: rgba(26,39,68,1);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .form-row .form-group {
+    margin-bottom: 0;
+  }
+
+  /* ── CHECKBOX ── */
+  .checkbox-group {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: 18px; height: 18px;
+    cursor: pointer;
+    accent-color: var(--ibv-red);
+  }
+  .checkbox-group label {
+    margin: 0; font-size: 13px; color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .checkbox-group a {
+    color: var(--ibv-red);
+    text-decoration: none;
+  }
+  .checkbox-group a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── BUTTONS ── */
+  .form-buttons {
+    display: flex; gap: 1rem;
+    margin-top: 2rem;
+  }
+  .btn-submit {
+    flex: 1;
+    background: var(--ibv-red);
+    color: #fff;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(192,57,43,0.35);
+  }
+  .btn-submit:hover {
+    background: var(--ibv-red-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(192,57,43,0.45);
+  }
+  .btn-cancel {
+    flex: 1;
+    background: var(--btn-secondary-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-cancel:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border);
+  }
+
+  /* ── LOGIN LINK ── */
+  .login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .login-link a {
+    color: var(--ibv-red);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--footer-bg);
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 13px;
+    color: rgba(240,244,255,0.3);
+  }
+  footer a {
+    color: rgba(240,244,255,0.45);
+    text-decoration: none;
+  }
+  footer a:hover {
+    color: var(--ibv-red-light);
+  }
+
+  /* ── MOBILE NAV ── */
+  .mobile-menu {
+    display: none; position: fixed; top: 70px; left: 0; right: 0;
+    background: var(--nav-bg); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem; z-index: 999; flex-direction: column; gap: 0.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 15px; font-weight: 500; padding: 0.65rem 0.75rem;
+    border-radius: 8px; transition: background 0.2s, color 0.2s;
+  }
+  .mobile-menu a:hover { background: var(--border); color: var(--text-primary); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links, .nav-actions .btn-cta { display: none; }
+    .hamburger { display: flex; }
+    .register-container { padding: 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-buttons { flex-direction: column; }
+  }
+  @media (max-width: 480px) {
+    main { padding: 70px 1rem 1rem; }
+    .register-container { padding: 1.5rem; }
+    .register-header h1 { font-size: 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><img src="logo.png" alt="IBV Logo"></div>
+      <div class="logo-text">
+        <strong>Bela Vista</strong>
+        <span>Imobiliária · Itajobi-SP</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="index.html#imoveis">Imóveis</a></li>
+      <li><a href="index.html#empresa">Empresa</a></li>
+      <li><a href="index.html#servicos">Serviços</a></li>
+      <li><a href="index.html#contato">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Alternar modo claro/escuro" aria-label="Alternar tema">
+        <span class="theme-icon">
+          <span>🌙</span>
+          <span>☀️</span>
+        </span>
+      </button>
+      <a href="login.html" class="btn-cta">Login</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Início</a>
+  <a href="index.html#imoveis">Imóveis</a>
+  <a href="index.html#empresa">Empresa</a>
+  <a href="index.html#servicos">Serviços</a>
+  <a href="index.html#contato">Contato</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+  <div class="register-container">
+    <div class="register-header">
+      <h1>Criar Conta</h1>
+      <p>Cadastre-se para acessar nossos imóveis exclusivos</p>
+    </div>
+
+    <form id="registerForm" onsubmit="handleSubmit(event)">
+      <!-- Nome e Sobrenome -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Nome *</label>
+          <input type="text" id="firstName" name="firstName" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Sobrenome *</label>
+          <input type="text" id="lastName" name="lastName" placeholder="Seu sobrenome" required>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required>
+      </div>
+
+      <!-- Telefone e CPF -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Telefone *</label>
+          <input type="tel" id="phone" name="phone" placeholder="(17) 99999-9999" required>
+        </div>
+        <div class="form-group">
+          <label for="cpf">CPF *</label>
+          <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+        </div>
+      </div>
+
+      <!-- Cidade e Estado -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">Cidade *</label>
+          <input type="text" id="city" name="city" placeholder="Itajobi" required>
+        </div>
+        <div class="form-group">
+          <label for="state">Estado *</label>
+          <select id="state" name="state" required>
+            <option value="">Selecione</option>
+            <option value="SP">São Paulo</option>
+            <option value="MG">Minas Gerais</option>
+            <option value="RJ">Rio de Janeiro</option>
+            <option value="BA">Bahia</option>
+            <option value="RS">Rio Grande do Sul</option>
+            <option value="PR">Paraná</option>
+            <option value="SC">Santa Catarina</option>
+            <option value="GO">Goiás</option>
+            <option value="DF">Distrito Federal</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Senha -->
+      <div class="form-group">
+        <label for="password">Senha *</label>
+        <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8">
+      </div>
+
+      <!-- Confirmar Senha -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Senha *</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required minlength="8">
+      </div>
+
+      <!-- Tipo de Usuário -->
+      <div class="form-group">
+        <label for="userType">Tipo de Cadastro *</label>
+        <select id="userType" name="userType" required>
+          <option value="">Selecione</option>
+          <option value="buyer">Comprador</option>
+          <option value="seller">Vendedor</option>
+          <option value="agent">Agente Imobiliário</option>
+        </select>
+      </div>
+
+      <!-- Checkbox de Termos -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms">Concordo com os <a href="#">Termos de Serviço</a> e a <a href="#">Política de Privacidade</a></label>
+      </div>
+
+      <!-- Checkbox de Newsletter -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="newsletter" name="newsletter">
+        <label for="newsletter">Desejo receber notificações sobre novos imóveis</label>
+      </div>
+
+      <!-- Botões -->
+      <div class="form-buttons">
+        <button type="submit" class="btn-submit">Criar Conta</button>
+        <a href="index.html" class="btn-cancel">Cancelar</a>
+      </div>
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      Já tem conta? <a href="login.html">Faça login aqui</a>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2024 Bela Vista Imobiliária. Todos os direitos reservados.</p>
+  <p>
+    <a href="#">Privacidade</a> | <a href="#">Termos</a> | <a href="#">Contato</a>
+  </p>
+</footer>
+
+<script>
+async function handleSubmit(event) {
+  event.preventDefault();
+
+  const nome =
+    document.getElementById('firstName').value + ' ' +
+    document.getElementById('lastName').value;
+
+  const email = document.getElementById('email').value;
+  const telefone = document.getElementById('phone').value;
+  const senha = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const tipo_interesse = document.getElementById('userType').value;
+
+  if (senha !== confirmPassword) {
+    alert('As senhas não coincidem!');
+    return;
+  }
+
+  try {
+    const resposta = await fetch(
+      'http://localhost:3200/auth/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nome,
+          email,
+          senha,
+          telefone,
+          tipo_interesse
+        })
+      }
+    );
+
+    const dados = await resposta.json();
+
+    if (resposta.ok) {
+      alert(dados.mensagem);
+    } else {
+      alert(dados.erro);
+    }
+
+  } catch (erro) {
+    console.error(erro);
+    alert('Erro ao conectar com o servidor.');
+  }
+}
+</script>
+</body>
+</html>
