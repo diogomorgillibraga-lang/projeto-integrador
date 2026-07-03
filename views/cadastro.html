@@ -539,19 +539,22 @@ async function handleSubmit(event) {
     const dados = await resposta.json();
 
     if (resposta.ok) {
-      alert(dados.mensagem);
+      // Se deu certo, tenta usar 'mensagem' ou avisa o sucesso
+      alert(dados.mensagem || dados.message || 'Cadastro realizado com sucesso!');
     } else {
-      alert(dados.erro);
+      // Se deu erro, verifica várias propriedades comuns de erro do back-end
+      // Se nenhuma existir, mostra uma mensagem padrão junto com o código do erro (ex: 400 ou 500)
+      const mensagemErro = dados.erro || dados.mensagem || dados.message || dados.error;
+      alert(mensagemErro || `Erro no servidor (Código: ${resposta.status})`);
     }
 
   } catch (erro) {
     console.error(erro);
-    alert('Erro ao conectar com o servidor.');
+    alert('Erro ao conectar com o servidor. Verifique sua internet.');
   }
+
 }
-    // Aqui você pode enviar os dados para seu servidor
-    //alert('Cadastro realizado com sucesso! Bem-vindo à Bela Vista Imobiliária.');
-    // document.getElementById('registerForm').submit();
+   
 
 </script>
 </body>
