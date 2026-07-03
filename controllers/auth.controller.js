@@ -1,4 +1,3 @@
-
 // controllers/authController.js
 
 import jwt from 'jsonwebtoken'
@@ -54,9 +53,7 @@ export const autenticar = (req, res, next) => {
       process.env.JWT_SECRET || '{$Chave_Secreta$}'
     )
 
-    // Disponibiliza dados do usuário
     req.usuario = decoded
-
     next()
 
   } catch (error) {
@@ -72,26 +69,22 @@ export const autenticar = (req, res, next) => {
 
 export const login = async (req, res) => {
   try {
-
     const { email, senha } = req.body
 
-    // Validação básica
     if (!email || !senha) {
       return res.status(400).json({
         erro: 'Email e senha são obrigatórios'
       })
     }
 
-    // MUDANÇA 1: Trocamos o ? por $1 para o PostgreSQL
+    // Busca o usuário de forma segura usando "usuarios" com aspas para o Postgres
     const resultadoBusca = await pool.query(
-      'SELECT * FROM usuarios WHERE email = $1',
+      'SELECT * FROM "usuarios" WHERE email = $1',
       [email]
     )
 
-    // MUDANÇA 2: Pegamos a lista de usuários de dentro de .rows
     const usuarios = resultadoBusca.rows
 
-    // Se a lista estiver vazia, o usuário não existe
     if (!usuarios.length) {
       return res.status(401).json({
         erro: 'Usuário ou senha incorretos'
@@ -132,51 +125,40 @@ export const login = async (req, res) => {
     })
 
   } catch (error) {
-
     console.error(error)
-
     return res.status(500).json({
       erro: 'Erro interno do servidor'
     })
-
   }
 }
 
+// ==========================
+// CADASTRO (FLUXO CORRIGIDO)
+// ==========================
+
 export const cadastrar = async (req, res) => {
   try {
+    const { nome, email, senha, telefone, tipo_interesse } = req.body
 
-    const {
-      nome,
-      email,
-      senha,
-      telefone,
-      tipo_interesse
+    // 1. Validação básica de campos obrigatórios
+    if (!nome || !email || !senha) {
+      return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios.' })
+    }
 
-    
-    } = req.body
+    // 2. PASSO CORRETO: Verifica primeiro se o e-mail já existe no banco Neon
+    const resultadoBusca = await pool.query('SELECT * FROM "usuarios" WHERE email = $1', [email])
+    const usuarioExiste = resultadoBusca.rows
 
-    // FORMATO CORRETO PARA O NEON (POSTGRESQL)
-// Note que usamos $1, $2, $3, $4, $5 em vez de pontos de interrogação (?)
-const queryCadastro = 'INSERT INTO usuarios (nome, email, senha, telefone, tipo_interesse) VALUES ($1, $2, $3, $4, $5)';
-const valoresCadastro = [nome, email, senha, telefone, tipo_interesse];
+    if (usuarioExiste.length > 0) {
+      return res.status(400).json({ erro: 'Este e-mail já está cadastrado!' })
+    }
 
-// Executamos usando o .query (e não .execute)
-await pool.query(queryCadastro, valoresCadastro);
-
-const resultadoBusca = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
-
-// 2. Criamos a variável que o seu código precisa para a validação (lendo as linhas retornadas)
-const usuarioExiste = resultadoBusca.rows;
-
-// 3. Se o array tiver algum usuário dentro, significa que o e-mail já existe
-if (usuarioExiste.length > 0) {
-  return res.status(400).json({ erro: 'Este e-mail já está cadastrado!' });
-}
-
+    // 3. PASSO CORRETO: Cria a criptografia da senha de forma segura antes de salvar
     const senhaHash = await gerarHashSenha(senha)
 
+    // 4. PASSO CORRETO: Executa um único INSERT limpo no PostgreSQL
     await pool.query(
-      `INSERT INTO usuarios
+      `INSERT INTO "usuarios"
       (nome, email, senha, telefone, adm, tipo_interesse)
       VALUES ($1, $2, $3, $4, $5, $6)`,
       [
@@ -184,25 +166,22 @@ if (usuarioExiste.length > 0) {
         email,
         senhaHash,
         telefone,
-        0,
+        0, // Padrão 0 para não-administrador
         tipo_interesse
       ]
-    );
+    )
 
-    res.status(201).json({
+    return res.status(201).json({
       mensagem: 'Usuário cadastrado com sucesso'
     })
 
   } catch (erro) {
-    console.error("========== ERRO ==========");
-    console.error(erro);
-    console.error(erro.message);
-    console.error("==========================");
+    console.error("========== ERRO ==========")
+    console.error(erro)
+    console.error("==========================")
   
-    res.status(500).json({
-      erro: erro.message
-    });
+    return res.status(500).json({
+      erro: 'Erro interno ao realizar o cadastro.'
+    })
   }
-
-  }
-
+}
