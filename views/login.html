@@ -478,19 +478,13 @@ async function handleLogin(event) {
 
   try {
 
-    const resposta = await fetch(
-      'https://projeto-integrador-1-h022.onrender.com/login.html',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          senha
-        })
-      }
-    );
+    const resposta = await fetch('https://onrender.com', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, senha })
+});
 
     const dados = await resposta.json();
 
