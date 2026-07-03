@@ -14,10 +14,10 @@ const app = express(); // <-- primeiro cria o app
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.json());
-
+app.use(cors());
 app.use("/api/imoveis", imoveisRoutes);
 app.use("/api/usuarios", usuariosRoutes);
-app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
