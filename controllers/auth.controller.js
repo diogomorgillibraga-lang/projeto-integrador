@@ -82,7 +82,7 @@ export const login = async (req, res) => {
       })
     }
 
-    const [usuarios] = await pool.execute(
+    const [usuarios] = await pool.query(
       'SELECT * FROM usuarios WHERE email = ?',
       [email]
     )
@@ -149,7 +149,7 @@ export const cadastrar = async (req, res) => {
     
     } = req.body
 
-    const [usuarioExiste] = await pool.execute(
+    const [usuarioExiste] = await pool.query(
       'SELECT id FROM usuarios WHERE email = ?',
       [email]
     )
