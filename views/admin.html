@@ -999,35 +999,55 @@
       }
     }
     // FUNÇÃO PARA ALTERNAR ENTRE AS ABAS (IMÓVEIS, USUÁRIOS, CONFIGURAÇÕES)
-function showTab(tabId) {
-  // 1. Esconde TODOS os blocos de conteúdo do painel
-  const contents = document.querySelectorAll('.tab-content, .admin-section, section');
-  contents.forEach(content => {
-    content.style.display = 'none';
-    content.classList.remove('active');
-  });
+// ==========================================
+    // FUNÇÃO DE NAVEGAÇÃO ENTRE ABAS DO PAINEL (CORRIGIDA)
+    // ==========================================
+    function showSection(sectionName) {
+      // 1. Esconde todos os blocos de conteúdo adicionando o sufixo -section
+      const secoes = ['imoveis', 'usuarios', 'configuracoes'];
+      secoes.forEach(secao => {
+        const elemento = document.getElementById(`${secao}-section`);
+        if (elemento) {
+          elemento.style.display = 'none';
+        }
+      });
 
-  // 2. Remove o estado "ativo" de todos os botões do menu lateral
-  const links = document.querySelectorAll('.sidebar a, .sidebar button, .nav-link');
-  links.forEach(link => {
-    link.classList.remove('active');
-  });
+      // 2. Mostra apenas a seção correta que foi clicada
+      const secaoAtiva = document.getElementById(`${sectionName}-section`);
+      if (secaoAtiva) {
+        secaoAtiva.style.display = 'block';
+      } else {
+        console.error("Não foi possível encontrar a tela:", `${sectionName}-section`);
+      }
 
-  // 3. Mostra apenas a aba que você clicou
-  const activeContent = document.getElementById(tabId);
-  if (activeContent) {
-    activeContent.style.display = 'block';
-    activeContent.classList.add('active');
-  } else {
-    console.error("Não foi possível encontrar a tela com o ID:", tabId);
-  }
+      // 3. Altera o título dinâmico na barra superior
+      const mapaTitulos = {
+        'imoveis': 'Gerenciar Imóveis',
+        'usuarios': 'Gerenciar Usuários',
+        'configuracoes': 'Configurações do Sistema'
+      };
+      const pageTitle = document.getElementById('pageTitle');
+      if (pageTitle && mapaTitulos[sectionName]) {
+        pageTitle.textContent = mapaTitulos[sectionName];
+      }
 
-  // 4. Adiciona a classe ativa no botão que foi clicado para dar o efeito visual
-  const clickedLink = document.querySelector(`[onclick="showTab('${tabId}')"]`);
-  if (clickedLink) {
-    clickedLink.classList.add('active');
-  }
-}
+      // 4. Atualiza o efeito visual de botão selecionado no menu lateral
+      const links = document.querySelectorAll('.sidebar-nav a');
+      links.forEach(link => {
+        link.classList.remove('active');
+      });
+
+      // Localiza o botão clicado através do seu evento onclick e ativa o visual dele
+      const clickedLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+      if (clickedLink) {
+        clickedLink.classList.add('active');
+      }
+    }
+
+    // Garante que assim que a página terminar de carregar, ela abra direto nos Imóveis
+    document.addEventListener("DOMContentLoaded", () => {
+      showSection('imoveis');
+    });
 
 // Garante que a página comece mostrando os Imóveis por padrão
 document.addEventListener("DOMContentLoaded", () => {
