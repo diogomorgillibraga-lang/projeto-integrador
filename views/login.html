@@ -715,13 +715,21 @@
 
     const dados = await resposta.json();
 
-    // Palavra 'JavaScript' removida daqui!
     if (resposta.ok) {
       localStorage.setItem('token', dados.token);
       alert('Login realizado com sucesso!');
 
-      // Verifica se é true (booleano) ou o número 1
-      if (dados.usuario && (dados.usuario.adm === true || dados.usuario.adm === 1 || dados.usuario.adm === 'true')) {
+      // Mostra no console exatamente o que o backend respondeu sobre o usuário
+      console.log("Dados do usuário logado:", dados.usuario);
+
+      const isAdmin = dados.usuario && (
+        dados.usuario.adm === true || 
+        dados.usuario.adm === 1 || 
+        dados.usuario.adm === 'true' ||
+        dados.usuario.ADM === true
+      );
+
+      if (isAdmin) {
         window.location.href = '/admin'; 
       } else {
         window.location.href = '/Pagina_inicial'; 
