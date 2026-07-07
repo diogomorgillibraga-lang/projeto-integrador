@@ -465,7 +465,7 @@
   hamburger.addEventListener('click', () => {
     mobileMenu.classList.toggle('open');
   });
-async function handleLogin(event) {
+  async function handleLogin(event) {
   event.preventDefault();
 
   const email = document.getElementById('email').value;
@@ -477,40 +477,43 @@ async function handleLogin(event) {
   }
 
   try {
+    // CORRIGIDO: Agora aponta para a API correta (/api/auth/login)
+    const resposta = await fetch('https://projeto-integrador-1-h022.onrender.com/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, senha })
+    });
 
-    const resposta = await fetch('https://projeto-integrador-1-h022.onrender.com/login.html', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, senha })
-});
+    // Proteção para verificar se a resposta é um JSON válido
+    const contentType = resposta.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const textoErro = await resposta.text();
+      console.error("Resposta do servidor não é JSON:", textoErro);
+      alert(`Erro no servidor. O servidor respondeu um HTML (Código: ${resposta.status}).`);
+      return;
+    }
 
     const dados = await resposta.json();
 
     if (resposta.ok) {
-
       localStorage.setItem('token', dados.token);
-
       alert('Login realizado com sucesso!');
 
-      if (dados.usuario.adm) {
-    window.location.href = 'admin.html';
-} else {
-    window.location.href = 'index.html';
-}
-
+      // Redirecionamento baseado no tipo de usuário
+      if (dados.usuario && dados.usuario.adm) {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'index.html'; // Garanta que sua página inicial seja index.html ou Pagina_inicial
+      }
     } else {
-
-      alert(dados.erro);
-
+      alert(dados.erro || dados.mensagem || 'E-mail ou senha incorretos.');
     }
 
   } catch (erro) {
-
     console.error(erro);
     alert('Erro ao conectar ao servidor.');
-
   }
 }
 </script>
