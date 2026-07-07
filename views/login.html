@@ -391,8 +391,8 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Início</a>
-  <a href="index.html#imoveis">Imóveis</a>
+  <a href="/Pagina_inicial">Início</a>
+  <a href="/Pagina_inicial#imoveis">Imóveis</a>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -434,7 +434,7 @@
     
     <!-- Signup Link -->
     <div class="signup-link">
-      Não tem conta? <a href="cadastro.html">Cadastre-se aqui</a>
+      Não tem conta? <a href="/cadastrar">Cadastre-se aqui</a>
     </div>
   </div>
 </main>
@@ -503,9 +503,9 @@
 
       // Redirecionamento baseado no tipo de usuário
       if (dados.usuario && dados.usuario.adm) {
-        window.location.href = 'admin.html';
+        window.location.href = '/admin';
       } else {
-        window.location.href = 'index.html'; // Garanta que sua página inicial seja index.html ou Pagina_inicial
+        window.location.href = '/Pagina_inicial'; // Garanta que sua página inicial seja index.html ou Pagina_inicial
       }
     } else {
       alert(dados.erro || dados.mensagem || 'E-mail ou senha incorretos.');
