@@ -777,11 +777,12 @@
 </div>
 <script>
   (async function protegerPagina() {
-      // 1. Esconde o corpo da página imediatamente enquanto valida
+      // 1. Esconde o HTML imediatamente para o usuário não ver o painel antes da validação
       document.documentElement.style.display = 'none';
   
       const token = localStorage.getItem('token');
   
+      // Se nem tiver token salvo, chuta direto para o login
       if (!token) {
           alert('Acesso negado. Faça login para acessar esta página.');
           window.location.href = '/login';
@@ -789,7 +790,7 @@
       }
   
       try {
-          // 2. Envia o token de forma segura pelo Header Authorization para a API
+          // 2. Envia o token para a nova rota que corrigimos no backend
           const resposta = await fetch('https://projeto-integrador-1-h022.onrender.com/api/auth/verificar-admin', {
               method: 'GET',
               headers: {
@@ -797,16 +798,20 @@
               }
           });
   
-          if (resposta.ok) {
-              // Se o token for válido e for Admin, mostra a página
+          // 3. Lê o JSON retornado pela API ({ valido: true } ou { valido: false })
+          const dados = await resposta.json();
+  
+          // 4. ROBUSTEZ: Valida tanto o status da resposta quanto o valor do JSON
+          if (resposta.ok && dados.valido === true) {
+              // Se o token for válido e o banco confirmou o TRUE booleano, a página aparece!
               document.documentElement.style.display = '';
           } else {
-              alert('Acesso negado. Você não tem permissão de administrador.');
+              alert(dados.erro || 'Acesso negado. Você não tem permissão de administrador.');
               window.location.href = '/login';
           }
       } catch (erro) {
-          console.error(erro);
-          alert('Erro ao validar sessão.');
+          console.error("Erro na validação do token:", erro);
+          alert('Sessão inválida ou erro de conexão.');
           window.location.href = '/login';
       }
   })();

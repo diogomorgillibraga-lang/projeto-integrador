@@ -497,18 +497,18 @@
 
     const dados = await resposta.json();
 
-    if (resposta.ok) {
-      localStorage.setItem('token', dados.token);
-      alert('Login realizado com sucesso!');
+    JavaScript
+if (resposta.ok) {
+  localStorage.setItem('token', dados.token);
+  alert('Login realizado com sucesso!');
 
-      // Redirecionamento limpo baseado no tipo de usuário
-      if (dados.usuario && dados.usuario.adm) {
-        window.location.href = '/admin'; // URL limpa
-      } else {
-        window.location.href = '/Pagina_inicial'; 
-      }
-    }
-
+  // CORREÇÃO: Verifica se é true (booleano) ou o número 1
+  if (dados.usuario && (dados.usuario.adm === true || dados.usuario.adm === 1 || dados.usuario.adm === 'true')) {
+    window.location.href = '/admin'; 
+  } else {
+    window.location.href = '/Pagina_inicial'; 
+  }
+}
   } catch (erro) {
     console.error(erro);
     alert('Erro ao conectar ao servidor.');
