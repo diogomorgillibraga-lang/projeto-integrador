@@ -1000,46 +1000,88 @@
     }
     
     async function handleSubmitImovel(event) {
-      event.preventDefault();
-    
-      const form = document.getElementById('imovelForm');
-      const data = new FormData(form);
-    
-      const imovel = {
-        usuario_id: 9, // ID fixado do Administrador Diogo
-        referencia: "REF-" + Date.now(),
-        tipo_negocio: data.get('status'),
-        tipo_imovel: data.get('tipo'),
-        titulo: data.get('titulo'),
-        descricao: data.get('descricao'),
-        preco: parseFloat(data.get('preco').replace(/[^\d,]/g, '').replace(',', '.')),
-        endereco: data.get('localizacao'),
-        quartos: parseInt(data.get('quartos') || 0),
-        banheiros: parseInt(data.get('banheiros') || 0),
-        vagas: parseInt(data.get('vagas') || 0),
-        area_m2: parseFloat(data.get('area') || 0),
-        ativo: true
-      };
-    
-      try {
-        const resposta = await fetch(`${API_URL}/imoveis`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(imovel)
-        });
-    
-        if (resposta.ok) {
-            alert("Imóvel salvo com sucesso!");
-            closeModal();
-            carregarImoveis();
-        } else {
-            alert("O servidor recusou salvar o imóvel.");
-        }
-      } catch (erro) {
-        console.error("Erro ao salvar imóvel:", erro);
-        alert("Erro ao salvar imóvel");
-      }
+  event.preventDefault();
+
+  const form = document.getElementById('imovelForm');
+  const data = new FormData(form);
+
+  // 1. Captura o campo de localização (Ex: "Centro, Itajobi - SP")
+  const localizacaoCompleta = data.get('localizacao') || '';
+  
+  // Tratamento inteligente para quebrar a string em Bairro, Cidade e Estado para o banco Neon
+  let bairro = "Centro";
+  let cidade = "Itajobi";
+  let estado = "SP";
+
+  if (localizacaoCompleta.includes(',')) {
+    const partes = localizacaoCompleta.split(',');
+    bairro = partes[0].trim();
+    if (partes[1] && partes[1].includes('-')) {
+      const subPartes = partes[1].split('-');
+      cidade = subPartes[0].trim();
+      estado = subPartes[1].trim();
     }
+  }
+
+  // 2. Monta o objeto EXATAMENTE com as colunas que estão na imagem da sua tabela do Neon
+  const imovel = {
+    usuario_id: 9, // ID do seu usuário Admin no banco Neon
+    referencia: "REF-" + Date.now(),
+    
+    // Mapeamento correto dos inputs do seu modal
+    tipo_negocio: data.get('status') || 'Venda', // Pega se é Venda ou Aluguel
+    tipo_imovel: data.get('tipo') || 'Casa',     // Pega se é Casa, Apartamento, etc.
+    
+    titulo: data.get('titulo'),
+    descricao: data.get('descricao') || '',
+    preco: parseFloat(data.get('preco').replace(/[^\d,]/g, '').replace(',', '.').trim()) || 0,
+    
+    // Alinhamento exato com as colunas da imagem do seu banco de dados:
+    endereco: localizacaoCompleta,
+    bairro: bairro,
+    cidade: cidade,
+    estado: estado,
+    link_mapa: '', 
+    
+    quartos: parseInt(data.get('quartos') || 0),
+    banheiros: parseInt(data.get('banheiros') || 0),
+    vagas: parseInt(data.get('vagas') || 0),
+    area_m2: parseFloat(data.get('area') || 0),
+    
+    destaque: false, // Coluna boolean vista no banco
+    ativo: true      // Coluna boolean vista no banco
+  };
+
+  // Log para você inspecionar no F12 exatamente o formato final dos dados antes do envio
+  console.log("Objeto enviado para a API:", imovel);
+
+  try {
+    const token = localStorage.getItem('token'); // Captura o token para passar na segurança se necessário
+
+    const resposta = await fetch(`${API_URL}/imoveis`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // Garante o envio do token se sua rota /imoveis for protegida
+      },
+      body: JSON.stringify(imovel)
+    });
+
+    if (resposta.ok) {
+        alert("Imóvel salvo com sucesso!");
+        closeModal();
+        carregarImoveis(); // Recarrega a tabela na hora
+    } else {
+        // Se der erro 500 ou outro, exibe a mensagem detalhada do backend
+        const dadosErro = await resposta.json().catch(() => ({}));
+        console.error("Detalhes do erro no servidor:", dadosErro);
+        alert(`O servidor recusou salvar o imóvel. Erro: ${dadosErro.erro || resposta.statusText}`);
+    }
+  } catch (erro) {
+    console.error("Erro na conexão ao salvar imóvel:", erro);
+    alert("Erro de rede ao salvar imóvel.");
+  }
+}
     
     
     // ==========================================
