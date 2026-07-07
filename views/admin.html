@@ -880,66 +880,66 @@
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:3200/api'
       : 'https://projeto-integrador-1-h022.onrender.com/api';
-    
-    
+
+
     // ==========================================
     // PASSO 2: CONTROLE DE ACESSO (O SCRIPT DE PROTEÇÃO)
     // ==========================================
     (async function protegerPagina() {
-        document.documentElement.style.display = 'none';
-        const token = localStorage.getItem('token');
-    
-        if (!token) {
-            alert('Acesso negado. Faça login para acessar esta página.');
-            window.location.href = '/login';
-            return;
+      document.documentElement.style.display = 'none';
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        alert('Acesso negado. Faça login para acessar esta página.');
+        window.location.href = '/login';
+        return;
+      }
+
+      try {
+        const resposta = await fetch(`${API_URL}/auth/verificar-admin`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const dados = await resposta.json();
+
+        if (resposta.ok && dados.valido === true) {
+          document.documentElement.style.display = '';
+
+          // Só carrega os dados do banco após garantir que o usuário é admin
+          carregarImoveis();
+          carregarUsuarios();
+        } else {
+          alert(dados.erro || 'Acesso negado. Você não tem permissão de administrador.');
+          window.location.href = '/login';
         }
-    
-        try {
-            const resposta = await fetch(`${API_URL}/auth/verificar-admin`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-    
-            const dados = await resposta.json();
-    
-            if (resposta.ok && dados.valido === true) {
-                document.documentElement.style.display = '';
-                
-                // Só carrega os dados do banco após garantir que o usuário é admin
-                carregarImoveis();
-                carregarUsuarios();
-            } else {
-                alert(dados.erro || 'Acesso negado. Você não tem permissão de administrador.');
-                window.location.href = '/login';
-            }
-        } catch (erro) {
-            console.error("Erro na validação do token:", erro);
-            alert('Sessão inválida ou erro de conexão.');
-            window.location.href = '/login';
-        }
+      } catch (erro) {
+        console.error("Erro na validação do token:", erro);
+        alert('Sessão inválida ou erro de conexão.');
+        window.location.href = '/login';
+      }
     })();
-    
-    
+
+
     // ==========================================
     // PASSO 3: FUNÇÕES DE CONTROLE DOS MODAIS
     // ==========================================
     function openAddModal() {
-        document.getElementById('addModal').classList.add('open');
-        document.getElementById('modalTitle').textContent = 'Adicionar Novo Imóvel';
-        document.getElementById('imovelForm').reset();
+      document.getElementById('addModal').classList.add('open');
+      document.getElementById('modalTitle').textContent = 'Adicionar Novo Imóvel';
+      document.getElementById('imovelForm').reset();
     }
-    
+
     function closeModal() {
-        document.getElementById('addModal').classList.remove('open');
+      document.getElementById('addModal').classList.remove('open');
     }
-    
+
     function editImovel(id) {
-        document.getElementById('addModal').classList.add('open');
-        document.getElementById('modalTitle').textContent = 'Editar Imóvel';
+      document.getElementById('addModal').classList.add('open');
+      document.getElementById('modalTitle').textContent = 'Editar Imóvel';
     }
-    
-    
+
+
     // ==========================================
     // PASSO 4: SISTEMA DE IMÓVEIS (GERENCIAMENTO)
     // ==========================================
@@ -947,23 +947,23 @@
       try {
         const resposta = await fetch(`${API_URL}/imoveis`);
         const imoveis = await resposta.json();
-    
+
         console.log("IMÓVEIS:", imoveis);
-    
+
         const tbody = document.getElementById("imoveisTable");
         if (!tbody) {
           console.error("tbody imoveisTable não encontrado");
           return;
         }
-    
+
         tbody.innerHTML = "";
-    
+
         imoveis.forEach(imovel => {
           const tr = document.createElement("tr");
-          const precoFormatado = imovel.preco 
+          const precoFormatado = imovel.preco
             ? parseFloat(imovel.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
             : "R$ 0,00";
-    
+
           tr.innerHTML = `
             <td>${imovel.titulo || "-"}</td>
             <td>${imovel.tipo_imovel || "-"}</td>
@@ -980,35 +980,33 @@
         console.error("Erro ao carregar imóveis:", erro);
       }
     }
-    
+
     function deleteImovel(id) {
-        if (confirm('Tem certeza que deseja deletar este imóvel?')) {
-            fetch(`${API_URL}/imoveis/${id}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    alert('Imóvel deletado com sucesso!');
-                    carregarImoveis();
-                } else {
-                    alert('Erro ao deletar: O servidor rejeitou o pedido.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro de conexão com o servidor.');
-            });
-        }
+      if (confirm('Tem certeza que deseja deletar este imóvel?')) {
+        fetch(`${API_URL}/imoveis/${id}`, { method: 'DELETE' })
+          .then(response => {
+            if (response.ok) {
+              alert('Imóvel deletado com sucesso!');
+              carregarImoveis();
+            } else {
+              alert('Erro ao deletar: O servidor rejeitou o pedido.');
+            }
+          })
+          .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro de conexão com o servidor.');
+          });
+      }
     }
-    
+
     async function handleSubmitImovel(event) {
   event.preventDefault();
 
   const form = document.getElementById('imovelForm');
   const data = new FormData(form);
 
-  // 1. Captura o campo de localização (Ex: "Centro, Itajobi - SP")
   const localizacaoCompleta = data.get('localizacao') || '';
   
-  // Tratamento inteligente para quebrar a string em Bairro, Cidade e Estado para o banco Neon
   let bairro = "Centro";
   let cidade = "Itajobi";
   let estado = "SP";
@@ -1023,46 +1021,53 @@
     }
   }
 
-  // 2. Monta o objeto EXATAMENTE com as colunas que estão na imagem da sua tabela do Neon
+  // --- HIGIENIZAÇÃO RIGOROSA DO PREÇO ---
+  let precoRaw = data.get('preco') || '0';
+  // Remove "R$", espaços, pontos de milhar e troca a vírgula decimal por ponto
+  let precoLimpo = precoRaw
+    .replace(/R\$/g, '') 
+    .replace(/\s/g, '')  
+    .replace(/\./g, '')  // Remove pontos de milhar (Ex: 350.000 -> 350000)
+    .replace(',', '.');  // Troca a vírgula decimal por ponto (Ex: 50,75 -> 50.75)
+  
+  const precoFinal = parseFloat(precoLimpo) || 0;
+
   const imovel = {
-    usuario_id: 9, // ID do seu usuário Admin no banco Neon
+    usuario_id: 9, // ID do Admin no banco Neon
     referencia: "REF-" + Date.now(),
     
-    // Mapeamento correto dos inputs do seu modal
-    tipo_negocio: data.get('status') || 'Venda', // Pega se é Venda ou Aluguel
-    tipo_imovel: data.get('tipo') || 'Casa',     // Pega se é Casa, Apartamento, etc.
+    tipo_negocio: data.get('status') || 'Venda', 
+    tipo_imovel: data.get('tipo') || 'Casa',     
     
-    titulo: data.get('titulo'),
-    descricao: data.get('descricao') || '',
-    preco: parseFloat(data.get('preco').replace(/[^\d,]/g, '').replace(',', '.').trim()) || 0,
+    titulo: data.get('titulo') ? data.get('titulo').trim() : "Sem título",
+    descricao: data.get('descricao') ? data.get('descricao').trim() : '',
+    preco: precoFinal, // Passa o número purificado
     
-    // Alinhamento exato com as colunas da imagem do seu banco de dados:
-    endereco: localizacaoCompleta,
+    endereco: localizacaoCompleta.trim(),
     bairro: bairro,
     cidade: cidade,
     estado: estado,
     link_mapa: '', 
     
-    quartos: parseInt(data.get('quartos') || 0),
-    banheiros: parseInt(data.get('banheiros') || 0),
-    vagas: parseInt(data.get('vagas') || 0),
-    area_m2: parseFloat(data.get('area') || 0),
+    quartos: parseInt(data.get('quartos')) || 0,
+    banheiros: parseInt(data.get('banheiros')) || 0,
+    vagas: parseInt(data.get('vagas')) || 0,
+    area_m2: parseFloat(data.get('area')) || 0,
     
-    destaque: false, // Coluna boolean vista no banco
-    ativo: true      // Coluna boolean vista no banco
+    destaque: false, 
+    ativo: true      
   };
 
-  // Log para você inspecionar no F12 exatamente o formato final dos dados antes do envio
-  console.log("Objeto enviado para a API:", imovel);
+  console.log("Objeto limpo enviado para a API:", imovel);
 
   try {
-    const token = localStorage.getItem('token'); // Captura o token para passar na segurança se necessário
+    const token = localStorage.getItem('token'); 
 
     const resposta = await fetch(`${API_URL}/imoveis`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // Garante o envio do token se sua rota /imoveis for protegida
+        "Authorization": `Bearer ${token}` 
       },
       body: JSON.stringify(imovel)
     });
@@ -1070,9 +1075,8 @@
     if (resposta.ok) {
         alert("Imóvel salvo com sucesso!");
         closeModal();
-        carregarImoveis(); // Recarrega a tabela na hora
+        carregarImoveis(); 
     } else {
-        // Se der erro 500 ou outro, exibe a mensagem detalhada do backend
         const dadosErro = await resposta.json().catch(() => ({}));
         console.error("Detalhes do erro no servidor:", dadosErro);
         alert(`O servidor recusou salvar o imóvel. Erro: ${dadosErro.erro || resposta.statusText}`);
@@ -1082,8 +1086,8 @@
     alert("Erro de rede ao salvar imóvel.");
   }
 }
-    
-    
+
+
     // ==========================================
     // PASSO 5: SISTEMA DE USUÁRIOS (GERENCIAMENTO)
     // ==========================================
@@ -1091,24 +1095,24 @@
       try {
         const resposta = await fetch(`${API_URL}/usuarios`);
         const usuarios = await resposta.json();
-    
+
         console.log("USUÁRIOS:", usuarios);
-    
+
         const tbody = document.getElementById("usuariosTable");
         if (!tbody) return;
-    
-        tbody.innerHTML = ""; 
-    
+
+        tbody.innerHTML = "";
+
         usuarios.forEach(usuario => {
           const tr = document.createElement("tr");
-          const dataFormatada = usuario.criado_em 
-            ? new Date(usuario.criado_em).toLocaleDateString('pt-BR') 
+          const dataFormatada = usuario.criado_em
+            ? new Date(usuario.criado_em).toLocaleDateString('pt-BR')
             : "-";
-    
-          const perfilUsuario = usuario.adm === true || usuario.adm === 1 
-            ? "Administrador" 
+
+          const perfilUsuario = usuario.adm === true || usuario.adm === 1
+            ? "Administrador"
             : (usuario.tipo_interesse || "Cliente");
-    
+
           tr.innerHTML = `
             <td>${usuario.nome || "-"}</td>
             <td>${usuario.email || "-"}</td>
@@ -1126,51 +1130,51 @@
         console.error("Erro ao carregar usuários:", erro);
       }
     }
-    
+
     function deleteUser(id) {
       if (confirm('Tem certeza que deseja deletar este usuário?')) {
         fetch(`${API_URL}/usuarios/${id}`, { method: 'DELETE' })
-        .then(response => {
-          if (response.ok) {
-            alert('Usuário deletado com sucesso!');
-            carregarUsuarios();
-          } else {
-            alert('Erro ao deletar: O servidor rejeitou a exclusão.');
-          }
-        })
-        .catch(error => {
-          console.error('Erro na requisição de exclusão:', error);
-          alert('Erro de conexão com o servidor.');
-        });
+          .then(response => {
+            if (response.ok) {
+              alert('Usuário deletado com sucesso!');
+              carregarUsuarios();
+            } else {
+              alert('Erro ao deletar: O servidor rejeitou a exclusão.');
+            }
+          })
+          .catch(error => {
+            console.error('Erro na requisição de exclusão:', error);
+            alert('Erro de conexão com o servidor.');
+          });
       }
     }
-    
-    
+
+
     // ==========================================
     // PASSO 6: UTILITÁRIOS ADICIONAIS E EVENTOS
     // ==========================================
     function mapTipoImovel(tipo) {
       const map = { casa: "Casa", apartamento: "Apartamento", terreno: "Terreno", comercio: "Comercial" };
       return map[tipo] || tipo;
-    } 
-    
+    }
+
     function mapTipoNegocio(status) {
       const map = { venda: "Venda", aluguel: "Aluguel" };
       return map[status] || status;
     }
-    
+
     function logout() {
-        if (confirm('Tem certeza que deseja sair?')) {
-          localStorage.removeItem('token'); // Limpa a sessão
-          window.location.href = '/login';
-        }
+      if (confirm('Tem certeza que deseja sair?')) {
+        localStorage.removeItem('token'); // Limpa a sessão
+        window.location.href = '/login';
+      }
     }
-    
+
     // Fecha modal clicando fora dele
-    document.getElementById('addModal').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
+    document.getElementById('addModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
     });
-    </script>
+  </script>
 </body>
 
 </html>
