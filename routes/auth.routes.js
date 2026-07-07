@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { login, cadastrar } from '../controllers/auth.controller.js'
+import { login, cadastrar, autenticar } from '../controllers/auth.controller.js' // 👈 CORRIGIDO: Adicionado o autenticar aqui
 
 const router = Router()
 
@@ -13,4 +13,5 @@ router.get('/verificar-admin', autenticar, (req, res) => {
     }
     return res.status(403).json({ valido: false, erro: "Não é administrador" });
 });
+
 export default router
