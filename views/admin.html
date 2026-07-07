@@ -778,6 +778,23 @@
 
 <script>
   // Theme Toggle
+  // Executa assim que a página carrega
+(function verificarAcesso() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenDaUrl = urlParams.get('token');
+
+    if (tokenDaUrl) {
+        localStorage.setItem('token', tokenDaUrl);
+        // Limpa o token da barra de endereço para segurança visual
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    const tokenGeral = localStorage.getItem('token');
+    if (!tokenGeral) {
+        alert('Você não tem permissão para acessar esta página.');
+        window.location.href = '/login';
+    }
+})();
   const themeToggle = document.getElementById('themeToggle');
   const htmlElement = document.documentElement;
   const savedTheme = localStorage.getItem('theme') || 'dark';

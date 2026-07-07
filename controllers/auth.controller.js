@@ -35,33 +35,62 @@ export const gerarToken = (payload) => {
 // ==========================
 // MIDDLEWARE DE AUTENTICAÇÃO
 // ==========================
-
 export const autenticar = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization
+    // Tenta pegar do Header ou da Query String da URL
+    const authHeader = req.headers.authorization;
+    let token = null;
 
-    if (!authHeader) {
-      return res.status(401).json({
-        erro: 'Token não informado'
-      })
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    } else if (req.query.token) {
+      token = req.query.token; // Captura o token enviado via ?token=...
     }
 
-    const token = authHeader.split(' ')[1]
+    if (!token) {
+      // Se não tem token nenhum, redireciona para a página de login
+      return res.status(401).send('Acesso negado. Faça login para acessar esta página.');
+    }
 
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || '{$Chave_Secreta$}'
     )
 
-    req.usuario = decoded
-    next()
+    req.usuario = decoded;
+    next();
 
   } catch (error) {
-    return res.status(401).json({
-      erro: 'Token inválido'
-    })
+    return res.status(401).send('Sessão expirada ou token inválido. Faça login novamente.');
   }
 }
+//
+//export const autenticar = (req, res, next) => {
+//  try {
+//    const authHeader = req.headers.authorization
+//
+//    if (!authHeader) {
+//      return res.status(401).json({
+//        erro: 'Token não informado'
+//      })
+//    }
+//
+//    const token = authHeader.split(' ')[1]
+//
+//    const decoded = jwt.verify(
+//      token,
+//      process.env.JWT_SECRET || '{$Chave_Secreta$}'
+//    )
+//
+//    req.usuario = decoded
+//    next()
+//
+//  } catch (error) {
+//    return res.status(401).json({
+//      erro: 'Token inválido'
+//    })
+//  }
+//}
 
 // ==========================
 // LOGIN

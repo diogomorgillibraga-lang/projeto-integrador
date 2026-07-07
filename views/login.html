@@ -503,12 +503,11 @@
 
       // Redirecionamento baseado no tipo de usuário
       if (dados.usuario && dados.usuario.adm) {
-        window.location.href = '/admin';
+        // Enviamos o token via query string para o backend conseguir ler na requisição da página
+        window.location.href = `/admin?token=${dados.token}`;
       } else {
-        window.location.href = '/Pagina_inicial'; // Garanta que sua página inicial seja index.html ou Pagina_inicial
+        window.location.href = '/Pagina_inicial'; 
       }
-    } else {
-      alert(dados.erro || dados.mensagem || 'E-mail ou senha incorretos.');
     }
 
   } catch (erro) {
