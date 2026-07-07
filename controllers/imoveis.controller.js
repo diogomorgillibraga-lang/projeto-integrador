@@ -1,11 +1,16 @@
 import db from "../config/database.js";
 
 // LISTAR IMÓVEIS
+// LISTAR IMÓVEIS (CORRIGIDO PARA POSTGRESQL / NEON)
 export const listarImoveis = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM imoveis");
-    res.json(rows);
+    // No Postgres, pegamos o objeto de resultado completo
+    const resultado = await db.query("SELECT * FROM imoveis ORDER BY id DESC");
+    
+    // Retornamos especificamente a propriedade .rows, que contém a lista de imóveis
+    res.json(resultado.rows || resultado);
   } catch (error) {
+    console.error("Erro ao listar imóveis:", error);
     res.status(500).json({ erro: error.message });
   }
 };
