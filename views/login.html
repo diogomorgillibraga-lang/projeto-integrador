@@ -501,10 +501,9 @@
       localStorage.setItem('token', dados.token);
       alert('Login realizado com sucesso!');
 
-      // Redirecionamento baseado no tipo de usuário
+      // Redirecionamento limpo baseado no tipo de usuário
       if (dados.usuario && dados.usuario.adm) {
-        // Enviamos o token via query string para o backend conseguir ler na requisição da página
-        window.location.href = `/admin?token=${dados.token}`;
+        window.location.href = '/admin'; // URL limpa
       } else {
         window.location.href = '/Pagina_inicial'; 
       }
