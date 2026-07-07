@@ -14,6 +14,17 @@ export const listarImoveis = async (req, res) => {
     res.status(500).json({ erro: error.message });
   }
 };
+// LISTAR USUÁRIOS (CORRIGIDO PARA POSTGRESQL)
+export const listarUsuarios = async (req, res) => {
+  try {
+    const resultado = await db.query("SELECT * FROM usuarios ORDER BY nome ASC");
+    // Retorna .rows para o padrão do Postgres
+    res.json(resultado.rows || resultado);
+  } catch (error) {
+    console.error("Erro ao listar usuários:", error);
+    res.status(500).json({ erro: error.message });
+  }
+};
 
 // CRIAR IMÓVEL
 export const criarImovel = async (req, res) => {
