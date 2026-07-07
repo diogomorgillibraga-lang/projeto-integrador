@@ -19,6 +19,7 @@ import usuariosApiRoutes from './routes/usuarios.routes.js';
 import authApiRoutes from './routes/auth.routes.js';
 import genericApiRoutes from './routes/generic.routes.js';
 import dashboardApiRoutes from './routes/dashboard.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 

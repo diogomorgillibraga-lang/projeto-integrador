@@ -520,21 +520,21 @@
 
   try {
     const resposta = await fetch(
-      'https://projeto-integrador-1-h022.onrender.com/auth/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          nome,
-          email,
-          senha,
-          telefone,
-          tipo_interesse
-        })
-      }
-    );
+  'https://projeto-integrador-1-h022.onrender.com/api/auth/register',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nome,
+      email,
+      senha,
+      telefone,
+      tipo_interesse
+    })
+  }
+);
 
     // --- CORREÇÃO DO ERRO DO F12 ---
     // Verifica se o servidor retornou HTML em vez de JSON
