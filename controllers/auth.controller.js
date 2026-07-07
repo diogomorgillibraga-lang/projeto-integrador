@@ -122,36 +122,31 @@ export const login = async (req, res) => {
 
     const usuario = usuarios[0]
 
-    const senhaValida = await compararSenha(
-      senha,
-      usuario.senha
-    )
-
-    if (!senhaValida) {
-      return res.status(401).json({
-        erro: 'Usuário ou senha incorretos'
-      })
-    }
-
-    const token = gerarToken({
-      id: usuario.id,
-      nome: usuario.nome,
-      email: usuario.email,
-      perfil: usuario.perfil,
-      adm: usuario.adm
-    })
     
-    return res.status(200).json({
-      autenticado: true,
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email,
-        perfil: usuario.perfil,
-        adm: usuario.adm
-      },
-      token
-    })
+    // ... dentro da função login, após: const usuario = usuarios[0]
+
+// Força a conversão para booleano puro do JavaScript, checando tanto 'adm' quanto 'ADM'
+const ehAdmin = usuario.adm === true || usuario.adm === 1 || usuario.ADM === true || usuario.ADM === 1;
+
+const token = gerarToken({
+  id: usuario.id,
+  nome: usuario.nome,
+  email: usuario.email,
+  perfil: usuario.perfil,
+  adm: ehAdmin // 👈 Agora vai explicitamente como true ou false puro
+})
+
+return res.status(200).json({
+  autenticado: true,
+  usuario: {
+    id: usuario.id,
+    nome: usuario.nome,
+    email: usuario.email,
+    perfil: usuario.perfil,
+    adm: ehAdmin // 👈 Garante que o frontend receba true ou false puro
+  },
+  token
+})
 
   } catch (error) {
     console.error(error)
