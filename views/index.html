@@ -494,40 +494,40 @@
         <button class="search-tab" onclick="setTab(this)">Alugar</button>
         <button class="search-tab" onclick="setTab(this)">Lançamentos</button>
       </div>
-
+    
       <div class="search-row">
-        <select class="search-select">
+        <select class="search-select" id="selectTipo">
           <option value="">Tipo do imóvel</option>
-          <option>Casa</option>
-          <option>Apartamento</option>
-          <option>Terreno</option>
-          <option>Comércio</option>
-          <option>Sítio / Chácara</option>
+          <option value="casa">Casa</option>
+          <option value="apartamento">Apartamento</option>
+          <option value="terreno">Terreno</option>
+          <option value="comercial">Comércio</option>
+          <option value="chácara">Sítio / Chácara</option>
         </select>
-        <select class="search-select">
+        <select class="search-select" id="selectCidade">
           <option value="">Cidade</option>
-          <option>Itajobi</option>
-          <option>Catanduva</option>
-          <option>Palmares Paulista</option>
-          <option>Pindorama</option>
+          <option value="itajobi">Itajobi</option>
+          <option value="catanduva">Catanduva</option>
+          <option value="palmares paulista">Palmares Paulista</option>
+          <option value="pindorama">Pindorama</option>
         </select>
-        <select class="search-select">
+        <select class="search-select" id="selectBairro">
           <option value="">Bairro</option>
-          <option>Centro</option>
-          <option>Jardim São Paulo</option>
-          <option>Vila Nova</option>
-          <option>Jardim das Flores</option>
+          <option value="centro">Centro</option>
+          <option value="jardim são paulo">Jardim São Paulo</option>
+          <option value="vila nova">Vila Nova</option>
+          <option value="jardim das flores">Jardim das Flores</option>
         </select>
-        <select class="search-select">
+        <select class="search-select" id="selectValor">
           <option value="">Faixa de valor</option>
-          <option>Até R$ 150 mil</option>
-          <option>R$ 150–300 mil</option>
-          <option>R$ 300–500 mil</option>
-          <option>R$ 500 mil–1 mi</option>
-          <option>Acima de R$ 1 mi</option>
+          <option value="0-150000">Até R$ 150 mil</option>
+          <option value="150000-300000">R$ 150–300 mil</option>
+          <option value="300000-500000">R$ 300–500 mil</option>
+          <option value="500000-1000000">R$ 500 mil–1 mi</option>
+          <option value="1000000-99999999">Acima de R$ 1 mi</option>
         </select>
       </div>
-
+    
       <div class="search-row-2">
         <div class="search-counter">
           <label>Quartos</label>
@@ -547,8 +547,8 @@
           <span id="vagas">0</span>
           <button onclick="inc('vagas')">+</button>
         </div>
-      
-        <button class="btn-search" onclick="buscar()">🔍 Buscar</button>
+        <!-- Botão de buscar adicionado aqui -->
+        <button class="btn-buscar" onclick="filtrarImoveis()" style="margin-left: auto; padding: 10px 20px; background: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer;">Buscar</button>
       </div>
     </div>
   </div>
@@ -789,6 +789,122 @@
         card.style.display = (tipo === 'todos' || tipoCard.includes(tipo)) ? 'block' : 'none';
       });
     }
+    // Estado global da aba selecionada (padrão: venda)
+let abaSelecionada = "venda"; 
+
+// Função para gerenciar a troca de abas (Comprar / Alugar / Lançamentos)
+function setTab(elemento) {
+  // Remove classe active de todos
+  document.querySelectorAll('.search-tab').forEach(tab => tab.classList.remove('active'));
+  // Adiciona no clicado
+  elemento.classList.add('active');
+  
+  const textoAba = elemento.innerText.toLowerCase();
+  if (textoAba === 'comprar') abaSelecionada = 'venda';
+  if (textoAba === 'alugar') abaSelecionada = 'aluguel';
+  if (textoAba === 'lançamentos') abaSelecionada = 'lançamentos';
+}
+
+// Funções para incrementar e decrementar os contadores
+function inc(id) {
+  const span = document.getElementById(id);
+  span.innerText = parseInt(span.innerText) + 1;
+}
+
+function dec(id) {
+  const span = document.getElementById(id);
+  let atual = parseInt(span.innerText);
+  if (atual > 0) {
+    span.innerText = atual - 1;
+  }
+}
+
+// Função Principal de Filtragem
+function filtrarImoveis() {
+  // 1. Pegar os valores selecionados no formulário
+  const tipoForm = document.getElementById('selectTipo').value;
+  const cidadeForm = document.getElementById('selectCidade').value;
+  const bairroForm = document.getElementById('selectBairro').value;
+  const valorForm = document.getElementById('selectValor').value;
+  
+  const quartosForm = parseInt(document.getElementById('quartos').innerText);
+  const banheirosForm = parseInt(document.getElementById('banheiros').innerText);
+  const vagasForm = parseInt(document.getElementById('vagas').innerText);
+
+  // 2. Selecionar todos os cards de imóveis na página
+  const cards = document.querySelectorAll('.card-imovel');
+
+  cards.forEach(card => {
+    // Pegar informações textuais e de data-attribute do card
+    const dataTipo = card.getAttribute('data-tipo').toLowerCase(); // ex: "venda casa"
+    const titulo = card.querySelector('.card-title').innerText.toLowerCase();
+    const localizacao = card.querySelector('.card-location').innerText.toLowerCase();
+    const textoFeatures = card.querySelector('.card-features').innerText.toLowerCase();
+    
+    // Extrair o preço numericamente do card
+    const precoTexto = card.querySelector('.card-price').innerText;
+    let precoNumerico = 0;
+    if (precoTexto.toLowerCase().includes('consulte')) {
+      precoNumerico = -1; // Caso especial para preço sob consulta
+    } else {
+      // Remove "R$", pontos e espaços para converter em número decimal válido
+      precoNumerico = parseFloat(precoTexto.replace(/[^\d]/g, ''));
+    }
+
+    // --- Extrair características via Regex ---
+    const qtdQuartosCard = textoFeatures.match(/(\d+)\s*quarto/)?.[1] ? parseInt(textoFeatures.match(/(\d+)\s*quarto/)[1]) : 0;
+    const qtdBanheirosCard = textoFeatures.match(/(\d+)\s*banheiro/)?.[1] ? parseInt(textoFeatures.match(/(\d+)\s*banheiro/)[1]) : 0;
+    const qtdVagasCard = textoFeatures.match(/(\d+)\s*vaga/)?.[1] ? parseInt(textoFeatures.match(/(\d+)\s*vaga/)[1]) : 0;
+
+    // --- Lógica de Validação dos Filtros ---
+    let atendeFiltros = true;
+
+    // Filtro 1: Aba (Venda / Aluguel)
+    if (!dataTipo.includes(abaSelecionada)) {
+      atendeFiltros = false;
+    }
+
+    // Filtro 2: Tipo de Imóvel
+    if (tipoForm && !dataTipo.includes(tipoForm)) {
+      atendeFiltros = false;
+    }
+
+    // Filtro 3: Cidade
+    if (cidadeForm && !localizacao.includes(cidadeForm)) {
+      atendeFiltros = false;
+    }
+
+    // Filtro 4: Bairro
+    // Trata pequenas variações como "Centro" ou "Jd. São Paulo" mapeando o texto contido
+    if (bairroForm) {
+      let bairroTratado = bairroForm;
+      if (bairroForm === "jardim são paulo") bairroTratado = "jd. são paulo";
+      if (!localizacao.includes(bairroTratado)) {
+        atendeFiltros = false;
+      }
+    }
+
+    // Filtro 5: Faixa de Valor
+    if (valorForm && precoNumerico !== -1) {
+      const [min, max] = valorForm.split('-').map(Number);
+      if (precoNumerico < min || precoNumerico > max) {
+        atendeFiltros = false;
+      }
+    }
+
+    // Filtro 6: Contadores (Mínimo de Quartos, Banheiros e Vagas)
+    if (quartosForm > 0 && qtdQuartosCard < quartosForm) atendeFiltros = false;
+    if (banheirosForm > 0 && qtdBanheirosCard < banheirosForm) atendeFiltros = false;
+    if (vagasForm > 0 && qtdVagasCard < vagasForm) atendeFiltros = false;
+
+    // 3. Mostrar ou Ocultar o card na tela
+    if (atendeFiltros) {
+      card.style.display = "block"; // Ou "flex" a depender do seu CSS original
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
 </script>
 </body>
 </html>
