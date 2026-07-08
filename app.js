@@ -20,7 +20,7 @@ import authApiRoutes from './routes/auth.routes.js';
 import genericApiRoutes from './routes/generic.routes.js';
 import dashboardApiRoutes from './routes/dashboard.routes.js';
 import authRoutes from './routes/auth.routes.js';
-
+import imoveisDetalhesRoutes from "./routes/imoveisdetalhes.routes.js";
 const app = express();
 
 // Middlewares obrigatórios
@@ -39,7 +39,7 @@ app.use('/Pagina_inicial', paginaInicialRoutes);
 app.use('/login', loginRoutes);
 app.use('/cadastrar', cadastrarRoutes);
 app.use('/admin', adminRoutes);
-
+app.use(imoveisDetalhesRoutes);
 // ==========================================
 // VÍNCULO DAS ROTAS DE API (JSON / BANCO)
 // ==========================================

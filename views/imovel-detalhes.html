@@ -561,7 +561,7 @@
     const simGrid = document.getElementById('similarGrid');
     similares.forEach(s => {
       const a = document.createElement('a');
-      a.href = `imovel-detalhes.html?id=${s.id}`;
+      a.href = `/imovel-detalhes?id=${s.id}`;
       a.className = 'similar-card';
       a.innerHTML = `
         <div class="similar-image">

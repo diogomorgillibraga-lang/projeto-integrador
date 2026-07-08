@@ -25,6 +25,26 @@ export const listarUsuarios = async (req, res) => {
     res.status(500).json({ erro: error.message });
   }
 };
+// BUSCAR IMÓVEL POR ID (PARA DETALHES)
+export const buscarImovelPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Fazemos a busca filtrando pelo ID usando o marcador $1 do Postgres
+    const resultado = await db.query("SELECT * FROM imoveis WHERE id = $1", [id]);
+
+    // Se não retornar nenhuma linha, o imóvel não existe
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ erro: "Imóvel não encontrado." });
+    }
+
+    // Retorna apenas o primeiro imóvel encontrado (objeto único)
+    res.json(resultado.rows[0]);
+  } catch (error) {
+    console.error("Erro ao buscar detalhes do imóvel:", error);
+    res.status(500).json({ erro: error.message });
+  }
+};
 
 // CRIAR IMÓVEL
 export const criarImovel = async (req, res) => {
