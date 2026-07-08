@@ -1,4 +1,15 @@
-import pool from '../config/database.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const renderizarAdmin = (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/admin.html'));
+};
+
+
+//import pool from '../config/database.js';
 
 // export async function dashboard(req, res) {
 //  try {

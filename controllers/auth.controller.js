@@ -35,33 +35,62 @@ export const gerarToken = (payload) => {
 // ==========================
 // MIDDLEWARE DE AUTENTICAÇÃO
 // ==========================
-
 export const autenticar = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization
+    // Tenta pegar do Header ou da Query String da URL
+    const authHeader = req.headers.authorization;
+    let token = null;
 
-    if (!authHeader) {
-      return res.status(401).json({
-        erro: 'Token não informado'
-      })
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    } else if (req.query.token) {
+      token = req.query.token; // Captura o token enviado via ?token=...
     }
 
-    const token = authHeader.split(' ')[1]
+    if (!token) {
+      // Se não tem token nenhum, redireciona para a página de login
+      return res.status(401).send('Acesso negado. Faça login para acessar esta página.');
+    }
 
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || '{$Chave_Secreta$}'
     )
 
-    req.usuario = decoded
-    next()
+    req.usuario = decoded;
+    next();
 
   } catch (error) {
-    return res.status(401).json({
-      erro: 'Token inválido'
-    })
+    return res.status(401).send('Sessão expirada ou token inválido. Faça login novamente.');
   }
 }
+//
+//export const autenticar = (req, res, next) => {
+//  try {
+//    const authHeader = req.headers.authorization
+//
+//    if (!authHeader) {
+//      return res.status(401).json({
+//        erro: 'Token não informado'
+//      })
+//    }
+//
+//    const token = authHeader.split(' ')[1]
+//
+//    const decoded = jwt.verify(
+//      token,
+//      process.env.JWT_SECRET || '{$Chave_Secreta$}'
+//    )
+//
+//    req.usuario = decoded
+//    next()
+//
+//  } catch (error) {
+//    return res.status(401).json({
+//      erro: 'Token inválido'
+//    })
+//  }
+//}
 
 // ==========================
 // LOGIN
@@ -93,36 +122,31 @@ export const login = async (req, res) => {
 
     const usuario = usuarios[0]
 
-    const senhaValida = await compararSenha(
-      senha,
-      usuario.senha
-    )
-
-    if (!senhaValida) {
-      return res.status(401).json({
-        erro: 'Usuário ou senha incorretos'
-      })
-    }
-
-    const token = gerarToken({
-      id: usuario.id,
-      nome: usuario.nome,
-      email: usuario.email,
-      perfil: usuario.perfil,
-      adm: usuario.adm
-    })
     
-    return res.status(200).json({
-      autenticado: true,
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email,
-        perfil: usuario.perfil,
-        adm: usuario.adm
-      },
-      token
-    })
+    // ... dentro da função login, após: const usuario = usuarios[0]
+
+// Força a conversão para booleano puro do JavaScript, checando tanto 'adm' quanto 'ADM'
+const ehAdmin = usuario.adm === true || usuario.adm === 1 || usuario.ADM === true || usuario.ADM === 1;
+
+const token = gerarToken({
+  id: usuario.id,
+  nome: usuario.nome,
+  email: usuario.email,
+  perfil: usuario.perfil,
+  adm: ehAdmin // 👈 Agora vai explicitamente como true ou false puro
+})
+
+return res.status(200).json({
+  autenticado: true,
+  usuario: {
+    id: usuario.id,
+    nome: usuario.nome,
+    email: usuario.email,
+    perfil: usuario.perfil,
+    adm: ehAdmin // 👈 Garante que o frontend receba true ou false puro
+  },
+  token
+})
 
   } catch (error) {
     console.error(error)

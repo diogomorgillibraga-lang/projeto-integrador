@@ -1,663 +1,761 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="dark">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Painel Administrativo - Imobiliária Bela Vista | Itajobi - SP">
-<meta name="keywords" content="admin, painel, imobiliária, Itajobi, imóveis">
-<title>Painel Admin - IBV Bela Vista | Itajobi - SP</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ibv-red: #C0392B;
-    --ibv-red-light: #E74C3C;
-    --ibv-red-dark: #922B21;
-    --ibv-navy: #1A2744;
-    --ibv-navy-light: #243563;
-    --ibv-navy-dark: #0F1A2E;
-  }
-  [data-theme="dark"] {
-    --bg-primary: #0D1421;
-    --bg-secondary: #131D30;
-    --bg-card: #1A2744;
-    --bg-card-hover: #1E2E50;
-    --text-primary: #F0F4FF;
-    --text-secondary: #9AABC9;
-    --text-muted: #607090;
-    --border: rgba(144,168,220,0.12);
-    --border-strong: rgba(144,168,220,0.25);
-    --nav-bg: rgba(13,20,33,0.92);
-    --input-bg: rgba(26,39,68,0.8);
-    --btn-secondary-bg: rgba(26,39,68,0.6);
-    --section-alt: #0F1A2E;
-    --footer-bg: #080E1A;
-    --shadow: 0 8px 32px rgba(0,0,0,0.5);
-    --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-  }
-  [data-theme="light"] {
-    --bg-primary: #F5F7FC;
-    --bg-secondary: #EEF1FA;
-    --bg-card: #FFFFFF;
-    --bg-card-hover: #F0F4FF;
-    --text-primary: #0F1A2E;
-    --text-secondary: #3A4F72;
-    --text-muted: #7A8FAB;
-    --border: rgba(26,39,100,0.1);
-    --border-strong: rgba(26,39,100,0.2);
-    --nav-bg: rgba(245,247,252,0.95);
-    --input-bg: rgba(238,241,250,0.9);
-    --btn-secondary-bg: rgba(255,255,255,0.8);
-    --section-alt: #EAEEF8;
-    --footer-bg: #0F1A2E;
-    --shadow: 0 8px 32px rgba(26,39,100,0.12);
-    --shadow-card: 0 4px 24px rgba(26,39,100,0.08);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    transition: background 0.3s, color 0.3s;
-    overflow-x: hidden;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Painel Administrativo - Imobiliária Bela Vista | Itajobi - SP">
+  <meta name="keywords" content="admin, painel, imobiliária, Itajobi, imóveis">
+  <title>Painel Admin - IBV Bela Vista | Itajobi - SP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ibv-red: #C0392B;
+      --ibv-red-light: #E74C3C;
+      --ibv-red-dark: #922B21;
+      --ibv-navy: #1A2744;
+      --ibv-navy-light: #243563;
+      --ibv-navy-dark: #0F1A2E;
+    }
 
-  /* ── LAYOUT ── */
-  .admin-wrapper {
-    display: flex;
-    min-height: 100vh;
-  }
+    [data-theme="dark"] {
+      --bg-primary: #0D1421;
+      --bg-secondary: #131D30;
+      --bg-card: #1A2744;
+      --bg-card-hover: #1E2E50;
+      --text-primary: #F0F4FF;
+      --text-secondary: #9AABC9;
+      --text-muted: #607090;
+      --border: rgba(144, 168, 220, 0.12);
+      --border-strong: rgba(144, 168, 220, 0.25);
+      --nav-bg: rgba(13, 20, 33, 0.92);
+      --input-bg: rgba(26, 39, 68, 0.8);
+      --btn-secondary-bg: rgba(26, 39, 68, 0.6);
+      --section-alt: #0F1A2E;
+      --footer-bg: #080E1A;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: 280px;
-    background: var(--bg-secondary);
-    border-right: 1px solid var(--border);
-    padding: 1.5rem;
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-    z-index: 900;
-  }
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 2rem;
-    text-decoration: none;
-    color: var(--text-primary);
-  }
-  .sidebar-logo {
-    width: 40px;
-    height: 32px;
-    background: #fff;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 2px;
-  }
-  .sidebar-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .sidebar-title {
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .sidebar-nav {
-    list-style: none;
-  }
-  .sidebar-nav li {
-    margin-bottom: 0.5rem;
-  }
-  .sidebar-nav a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0.75rem 1rem;
-    color: var(--text-secondary);
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background 0.2s, color 0.2s;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .sidebar-nav a:hover,
-  .sidebar-nav a.active {
-    background: var(--bg-card);
-    color: var(--ibv-red);
-  }
-  .sidebar-nav a.active {
-    background: rgba(192,57,43,0.15);
-  }
+    [data-theme="light"] {
+      --bg-primary: #F5F7FC;
+      --bg-secondary: #EEF1FA;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F0F4FF;
+      --text-primary: #0F1A2E;
+      --text-secondary: #3A4F72;
+      --text-muted: #7A8FAB;
+      --border: rgba(26, 39, 100, 0.1);
+      --border-strong: rgba(26, 39, 100, 0.2);
+      --nav-bg: rgba(245, 247, 252, 0.95);
+      --input-bg: rgba(238, 241, 250, 0.9);
+      --btn-secondary-bg: rgba(255, 255, 255, 0.8);
+      --section-alt: #EAEEF8;
+      --footer-bg: #0F1A2E;
+      --shadow: 0 8px 32px rgba(26, 39, 100, 0.12);
+      --shadow-card: 0 4px 24px rgba(26, 39, 100, 0.08);
+    }
 
-  /* ── MAIN CONTENT ── */
-  .main-content {
-    flex: 1;
-    margin-left: 280px;
-    background: var(--bg-primary);
-  }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ── TOP BAR ── */
-  .topbar {
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: var(--shadow-card);
-  }
-  .topbar-left h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  .theme-toggle {
-    width: 44px;
-    height: 24px;
-    background: var(--border-strong);
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    transition: background 0.3s;
-    padding: 0;
-  }
-  .theme-toggle::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--ibv-red);
-    transition: transform 0.3s;
-  }
-  [data-theme="light"] .theme-toggle::after {
-    transform: translateX(20px);
-  }
-  .logout-btn {
-    background: var(--ibv-red);
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .logout-btn:hover {
-    background: var(--ibv-red-light);
-  }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* ── CONTENT AREA ── */
-  .content {
-    padding: 2rem;
-  }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
 
-  /* ── STATS ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: var(--shadow-card);
-  }
-  .stat-label {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .stat-change {
-    font-size: 12px;
-    color: #27AE60;
-    margin-top: 0.5rem;
-  }
+    /* ── LAYOUT ── */
+    .admin-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
 
-  /* ── SECTION HEADER ── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .section-header h2 {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .section-actions {
-    display: flex;
-    gap: 0.75rem;
-  }
-  .btn-primary {
-    background: var(--ibv-red);
-    color: #fff;
-    border: none;
-    padding: 0.65rem 1.25rem;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-primary:hover {
-    background: var(--ibv-red-light);
-  }
-  .btn-secondary {
-    background: var(--btn-secondary-bg);
-    color: var(--text-primary);
-    border: 1px solid var(--border-strong);
-    padding: 0.65rem 1.25rem;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-secondary:hover {
-    background: var(--bg-card-hover);
-  }
-
-  /* ── TABLE ── */
-  .table-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  thead {
-    background: var(--section-alt);
-    border-bottom: 1px solid var(--border);
-  }
-  th {
-    padding: 1rem;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--text-secondary);
-  }
-  tbody tr:hover {
-    background: var(--bg-card-hover);
-  }
-  .badge {
-    display: inline-block;
-    padding: 0.35rem 0.75rem;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .badge-venda {
-    background: rgba(192,57,43,0.2);
-    color: #E74C3C;
-  }
-  .badge-aluguel {
-    background: rgba(26,82,118,0.2);
-    color: #5DADE2;
-  }
-  .action-buttons {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .btn-edit, .btn-delete, .btn-view {
-    padding: 0.4rem 0.8rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-edit {
-    background: rgba(26,82,118,0.2);
-    color: #5DADE2;
-  }
-  .btn-edit:hover {
-    background: rgba(26,82,118,0.3);
-  }
-  .btn-delete {
-    background: rgba(192,57,43,0.2);
-    color: #E74C3C;
-  }
-  .btn-delete:hover {
-    background: rgba(192,57,43,0.3);
-  }
-  .btn-view {
-    background: rgba(39,174,96,0.2);
-    color: #27AE60;
-  }
-  .btn-view:hover {
-    background: rgba(39,174,96,0.3);
-  }
-
-  /* ── MODAL ── */
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal.open {
-    display: flex;
-  }
-  .modal-content {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow);
-  }
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1rem;
-  }
-  .modal-header h2 {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-  .modal-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--text-secondary);
-  }
-
-  /* ── FORM ── */
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    background: var(--input-bg);
-    border: 1px solid var(--border-strong);
-    color: var(--text-primary);
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    transition: border-color 0.2s;
-  }
-  .form-group input::placeholder,
-  .form-group textarea::placeholder {
-    color: var(--text-muted);
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: var(--ibv-red);
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .form-row .form-group {
-    margin-bottom: 0;
-  }
-  .modal-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    justify-content: flex-end;
-  }
-  .btn-save {
-    background: var(--ibv-red);
-    color: #fff;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-save:hover {
-    background: var(--ibv-red-light);
-  }
-  .btn-cancel {
-    background: var(--btn-secondary-bg);
-    color: var(--text-primary);
-    border: 1px solid var(--border-strong);
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-cancel:hover {
-    background: var(--bg-card-hover);
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 1024px) {
+    /* ── SIDEBAR ── */
     .sidebar {
-      width: 240px;
+      width: 280px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 900;
     }
-    .main-content {
-      margin-left: 240px;
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+      text-decoration: none;
+      color: var(--text-primary);
     }
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
+
+    .sidebar-logo {
+      width: 40px;
+      height: 32px;
+      background: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2px;
     }
-  }
-  @media (max-width: 768px) {
-    .sidebar {
+
+    .sidebar-logo img {
       width: 100%;
-      height: auto;
-      position: relative;
-      border-right: none;
-      border-bottom: 1px solid var(--border);
-      padding: 1rem;
+      height: 100%;
+      object-fit: contain;
     }
-    .main-content {
-      margin-left: 0;
+
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 700;
     }
+
     .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background: var(--bg-card);
+      color: var(--ibv-red);
+    }
+
+    .sidebar-nav a.active {
+      background: rgba(192, 57, 43, 0.15);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      background: var(--bg-primary);
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-card);
+    }
+
+    .topbar-left h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--border-strong);
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.3s;
+      padding: 0;
+    }
+
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--ibv-red);
+      transition: transform 0.3s;
+    }
+
+    [data-theme="light"] .theme-toggle::after {
+      transform: translateX(20px);
+    }
+
+    .logout-btn {
+      background: var(--ibv-red);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: var(--ibv-red-light);
+    }
+
+    /* ── CONTENT AREA ── */
+    .content {
+      padding: 2rem;
+    }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-change {
+      font-size: 12px;
+      color: #27AE60;
+      margin-top: 0.5rem;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-primary {
+      background: var(--ibv-red);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--ibv-red-light);
+    }
+
+    .btn-secondary {
+      background: var(--btn-secondary-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* ── TABLE ── */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--section-alt);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    tbody tr:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-venda {
+      background: rgba(192, 57, 43, 0.2);
+      color: #E74C3C;
+    }
+
+    .badge-aluguel {
+      background: rgba(26, 82, 118, 0.2);
+      color: #5DADE2;
+    }
+
+    .action-buttons {
       display: flex;
       gap: 0.5rem;
-      overflow-x: auto;
     }
-    .sidebar-nav li {
-      flex-shrink: 0;
-    }
-    .sidebar-nav a {
-      padding: 0.5rem 0.75rem;
+
+    .btn-edit,
+    .btn-delete,
+    .btn-view {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
       font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .content {
-      padding: 1.5rem;
+
+    .btn-edit {
+      background: rgba(26, 82, 118, 0.2);
+      color: #5DADE2;
     }
-    .stats-grid {
-      grid-template-columns: 1fr;
+
+    .btn-edit:hover {
+      background: rgba(26, 82, 118, 0.3);
     }
-    .section-header {
-      flex-direction: column;
-      align-items: flex-start;
+
+    .btn-delete {
+      background: rgba(192, 57, 43, 0.2);
+      color: #E74C3C;
     }
-    .topbar {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
+
+    .btn-delete:hover {
+      background: rgba(192, 57, 43, 0.3);
     }
-    .topbar-right {
-      width: 100%;
+
+    .btn-view {
+      background: rgba(39, 174, 96, 0.2);
+      color: #27AE60;
+    }
+
+    .btn-view:hover {
+      background: rgba(39, 174, 96, 0.3);
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
       justify-content: space-between;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
     }
-    table {
-      font-size: 12px;
+
+    .modal-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
     }
-    th, td {
-      padding: 0.75rem;
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
     }
+
+    /* ── FORM ── */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--ibv-red);
+    }
+
     .form-row {
-      grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
-    .action-buttons {
-      flex-direction: column;
+
+    .form-row .form-group {
+      margin-bottom: 0;
     }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      transition: none !important;
-      animation: none !important;
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
     }
-  }
-</style>
+
+    .btn-save {
+      background: var(--ibv-red);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-save:hover {
+      background: var(--ibv-red-light);
+    }
+
+    .btn-cancel {
+      background: var(--btn-secondary-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 240px;
+      }
+
+      .main-content {
+        margin-left: 240px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1rem;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .sidebar-nav {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+      }
+
+      .sidebar-nav li {
+        flex-shrink: 0;
+      }
+
+      .sidebar-nav a {
+        padding: 0.5rem 0.75rem;
+        font-size: 12px;
+      }
+
+      .content {
+        padding: 1.5rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .topbar {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th,
+      td {
+        padding: 0.75rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="admin-wrapper">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <a href="index.html" class="sidebar-header">
-      <div class="sidebar-logo"><img src="logo.png" alt="IBV Logo"></div>
-      <div class="sidebar-title">Bela Vista</div>
-    </a>
-    <nav class="sidebar-nav">
-      <li><a href="#" class="active" onclick="showSection('imoveis')">🏠 Imóveis</a></li>
-      <li><a href="#" onclick="showSection('usuarios')">👥 Usuários</a></li>
-      <li><a href="#" onclick="showSection('configuracoes')">⚙️ Configurações</a></li>
-      <li><a href="index.html">← Voltar ao Site</a></li>
-    </nav>
-  </aside>
+  <div class="admin-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <a href="/Pagina_inicial" class="sidebar-header">
+        <div class="sidebar-logo"><img src="logo.png" alt="IBV Logo"></div>
+        <div class="sidebar-title">Bela Vista</div>
+      </a>
+      <nav class="sidebar-nav">
+        <li><a href="#" class="active" onclick="showSection('imoveis')">🏠 Imóveis</a></li>
+        <li><a href="#" onclick="showSection('usuarios')">👥 Usuários</a></li>
+        <li><a href="#" onclick="showSection('configuracoes')">⚙️ Configurações</a></li>
+        <li><a href="/Pagina_inicial">← Voltar ao Site</a></li>
+      </nav>
+    </aside>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-content">
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <h1 id="pageTitle">Gerenciar Imóveis</h1>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1 id="pageTitle">Gerenciar Imóveis</h1>
+        </div>
+        <div class="topbar-right">
+          <button class="theme-toggle" id="themeToggle" title="Alternar modo claro/escuro"></button>
+          <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
       </div>
-      <div class="topbar-right">
-        <button class="theme-toggle" id="themeToggle" title="Alternar modo claro/escuro"></button>
-        <button class="logout-btn" onclick="logout()">Sair</button>
-      </div>
-    </div>
 
-    <!-- CONTENT -->
-    <div class="content">
-      <!-- IMOVEIS SECTION -->
-      <div id="imoveis-section" class="section">
-        <div class="section-header">
-          <h2>Gerenciar Imóveis</h2>
-          <div class="section-actions">
-            <button class="btn-primary" onclick="openAddModal()">+ Adicionar Imóvel</button>
+      <!-- CONTENT -->
+      <div class="content">
+        <!-- IMOVEIS SECTION -->
+        <div id="imoveis-section" class="section">
+          <div class="section-header">
+            <h2>Gerenciar Imóveis</h2>
+            <div class="section-actions">
+              <button class="btn-primary" onclick="openAddModal()">+ Adicionar Imóvel</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Tipo</th>
+                  <th>Localização</th>
+                  <th>Preço</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="imoveisTable">
+
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Tipo</th>
-                <th>Localização</th>
-                <th>Preço</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="imoveisTable">
-              
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <!-- USUARIOS SECTION -->
+        <div id="usuarios-section" class="section" style="display: none;">
+          <div class="section-header">
+            <h2>Gerenciar Usuários</h2>
+          </div>
 
-      <!-- USUARIOS SECTION -->
-      <div id="usuarios-section" class="section" style="display: none;">
-        <div class="section-header">
-          <h2>Gerenciar Usuários</h2>
-        </div>
 
-       
-            <tbody>
-              <div class="table-container">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th>Email</th>
-                      <th>Tipo</th>
-                      <th>Data de Cadastro</th>
-                      <th>Ações</th>
-                    </tr>
-                  </thead>
-                  <!-- ADICIONADO O ID AQUI E LIMPADAS AS LINHAS FIXAS -->
-                  <tbody id="usuariosTable">
-                    <!-- O JavaScript vai preencher este espaço automaticamente -->
-                  </tbody>
-                </table>
-              </div>
-            </tbody>
-         
+          <tbody>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Tipo</th>
+                    <th>Data de Cadastro</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <!-- ADICIONADO O ID AQUI E LIMPADAS AS LINHAS FIXAS -->
+                <tbody id="usuariosTable">
+                  <!-- O JavaScript vai preencher este espaço automaticamente -->
+                </tbody>
+              </table>
+            </div>
+          </tbody>
+
         </div>
       </div>
 
@@ -688,399 +786,450 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- MODAL PARA ADICIONAR/EDITAR IMÓVEL -->
-<div id="addModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 id="modalTitle">Adicionar Novo Imóvel</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-
-    <form id="imovelForm" onsubmit="handleSubmitImovel(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Título *</label>
-          <input type="text" name="titulo" placeholder="Ex: Casa com Edícula no Centro" required>
-        </div>
-        <div class="form-group">
-          <label>Tipo *</label>
-          <select name="tipo" required>
-            <option value="">Selecione</option>
-            <option value="casa">Casa</option>
-            <option value="apartamento">Apartamento</option>
-            <option value="terreno">Terreno</option>
-            <option value="comercio">Comércio</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Status *</label>
-          <select name="status" required>
-            <option value="">Selecione</option>
-            <option value="venda">À Venda</option>
-            <option value="aluguel">Para Alugar</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Preço *</label>
-          <input type="text" name="preco" placeholder="R$ 0,00" required>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Quartos</label>
-          <input type="number" name="quartos" placeholder="0" min="0">
-        </div>
-        <div class="form-group">
-          <label>Banheiros</label>
-          <input type="number" name="banheiros" placeholder="0" min="0">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Vagas</label>
-          <input type="number" name="vagas" placeholder="0" min="0">
-        </div>
-        <div class="form-group">
-          <label>Área (m²)</label>
-          <input type="number" name="area" placeholder="0" min="0">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Localização *</label>
-        <input type="text" name="localizacao" placeholder="Ex: Centro, Itajobi - SP" required>
-      </div>
-
-      <div class="form-group">
-        <label>Descrição</label>
-        <textarea name="descricao" placeholder="Descreva o imóvel..." rows="4"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Imagem</label>
-        <input type="file" name="imagem" accept="image/*">
-      </div>
-
-      <div class="modal-actions">
-        <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
-        <button type="submit" class="btn-save">Salvar Imóvel</button>
-      </div>
-    </form>
   </div>
-</div>
 
-<script>
-  // Theme Toggle
-  const themeToggle = document.getElementById('themeToggle');
-  const htmlElement = document.documentElement;
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  htmlElement.setAttribute('data-theme', savedTheme);
-  
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = htmlElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    htmlElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
+  <!-- MODAL PARA ADICIONAR/EDITAR IMÓVEL -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Adicionar Novo Imóvel</h2>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
 
-  // Show Section
-  function showSection(section) {
-    // Hide all sections
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-    
-    // Show selected section
-    const sectionId = section + '-section';
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.style.display = 'block';
+      <form id="imovelForm" onsubmit="handleSubmitImovel(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Título *</label>
+            <input type="text" name="titulo" placeholder="Ex: Casa com Edícula no Centro" required>
+          </div>
+          <div class="form-group">
+            <label>Tipo *</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option value="casa">Casa</option>
+              <option value="apartamento">Apartamento</option>
+              <option value="terreno">Terreno</option>
+              <option value="comercio">Comércio</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status *</label>
+            <select name="status" required>
+              <option value="">Selecione</option>
+              <option value="venda">À Venda</option>
+              <option value="aluguel">Para Alugar</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Preço *</label>
+            <input type="text" name="preco" placeholder="R$ 0,00" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quartos</label>
+            <input type="number" name="quartos" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>Banheiros</label>
+            <input type="number" name="banheiros" placeholder="0" min="0">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Vagas</label>
+            <input type="number" name="vagas" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>Área (m²)</label>
+            <input type="number" name="area" placeholder="0" min="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Localização *</label>
+          <input type="text" name="localizacao" placeholder="Ex: Centro, Itajobi - SP" required>
+        </div>
+
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea name="descricao" placeholder="Descreva o imóvel..." rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Imagem</label>
+          <input type="file" name="imagem" accept="image/*">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar Imóvel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    // ==========================================
+    // PASSO 1: CONFIGURAÇÃO GLOBAL DA API (NO TOPO)
+    // ==========================================
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3200/api'
+      : 'https://projeto-integrador-1-h022.onrender.com/api';
+
+
+    // ==========================================
+    // PASSO 2: CONTROLE DE ACESSO (O SCRIPT DE PROTEÇÃO)
+    // ==========================================
+    (async function protegerPagina() {
+      document.documentElement.style.display = 'none';
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        alert('Acesso negado. Faça login para acessar esta página.');
+        window.location.href = '/login';
+        return;
+      }
+
+      try {
+        const resposta = await fetch(`${API_URL}/auth/verificar-admin`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const dados = await resposta.json();
+
+        if (resposta.ok && dados.valido === true) {
+          document.documentElement.style.display = '';
+
+          // Só carrega os dados do banco após garantir que o usuário é admin
+          carregarImoveis();
+          carregarUsuarios();
+        } else {
+          alert(dados.erro || 'Acesso negado. Você não tem permissão de administrador.');
+          window.location.href = '/login';
+        }
+      } catch (erro) {
+        console.error("Erro na validação do token:", erro);
+        alert('Sessão inválida ou erro de conexão.');
+        window.location.href = '/login';
+      }
+    })();
+
+
+    // ==========================================
+    // PASSO 3: FUNÇÕES DE CONTROLE DOS MODAIS
+    // ==========================================
+    function openAddModal() {
+      document.getElementById('addModal').classList.add('open');
+      document.getElementById('modalTitle').textContent = 'Adicionar Novo Imóvel';
+      document.getElementById('imovelForm').reset();
     }
 
-    // Update page title
-    const titles = {
-      'imoveis': 'Gerenciar Imóveis',
-      'usuarios': 'Gerenciar Usuários',
-      'configuracoes': 'Configurações'
-    };
-    document.getElementById('pageTitle').textContent = titles[section] || 'Gerenciar Imóveis';
+    function closeModal() {
+      document.getElementById('addModal').classList.remove('open');
+    }
 
-    // Update active nav
-    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-    event.target.classList.add('active');
-  }
+    function editImovel(id) {
+      document.getElementById('addModal').classList.add('open');
+      document.getElementById('modalTitle').textContent = 'Editar Imóvel';
+    }
 
-  // Modal Functions
-  function openAddModal() {
-    document.getElementById('addModal').classList.add('open');
-    document.getElementById('modalTitle').textContent = 'Adicionar Novo Imóvel';
-    document.getElementById('imovelForm').reset();
-  }
 
-  function closeModal() {
-    document.getElementById('addModal').classList.remove('open');
-  }
+    // ==========================================
+    // PASSO 4: SISTEMA DE IMÓVEIS (GERENCIAMENTO)
+    // ==========================================
+    async function carregarImoveis() {
+      try {
+        const resposta = await fetch(`${API_URL}/imoveis`);
+        const imoveis = await resposta.json();
 
-  function editImovel(id) {
-    document.getElementById('addModal').classList.add('open');
-    document.getElementById('modalTitle').textContent = 'Editar Imóvel';
-    // Aqui você carregaria os dados do imóvel
-  }
+        console.log("IMÓVEIS:", imoveis);
 
-  function deleteImovel(id) {
-    if (confirm('Tem certeza que deseja deletar este imóvel?')) {
-        // Ajuste a URL abaixo se a sua rota base for diferente (ex: tirar ou manter o /api)
-        fetch(`http://localhost:3200/api/imoveis/${id}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
+        const tbody = document.getElementById("imoveisTable");
+        if (!tbody) {
+          console.error("tbody imoveisTable não encontrado");
+          return;
+        }
+
+        tbody.innerHTML = "";
+
+        imoveis.forEach(imovel => {
+          const tr = document.createElement("tr");
+          const precoFormatado = imovel.preco
+            ? parseFloat(imovel.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+            : "R$ 0,00";
+
+          tr.innerHTML = `
+            <td>${imovel.titulo || "-"}</td>
+            <td>${imovel.tipo_imovel || "-"}</td>
+            <td>${imovel.endereco || "-"}</td>
+            <td>${precoFormatado}</td>
+            <td>${imovel.tipo_negocio || "-"}</td>
+            <td>
+              <button class="btn-delete" onclick="deleteImovel(${imovel.id})">Excluir</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar imóveis:", erro);
+      }
+    }
+
+    function deleteImovel(id) {
+      if (confirm('Tem certeza que deseja deletar este imóvel?')) {
+        fetch(`${API_URL}/imoveis/${id}`, { method: 'DELETE' })
+          .then(response => {
             if (response.ok) {
-                alert('Imóvel deletado com sucesso!');
-                window.location.reload();
+              alert('Imóvel deletado com sucesso!');
+              carregarImoveis();
             } else {
-                alert('Erro ao deletar: O servidor rejeitou o pedido.');
+              alert('Erro ao deletar: O servidor rejeitou o pedido.');
             }
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.error('Erro:', error);
             alert('Erro de conexão com o servidor.');
-        });
-    }
-}
-
-function deleteUser(id) {
-  if (confirm('Tem certeza que deseja deletar este usuário?')) {
-    
-    // Faz a requisição DELETE para a sua API na rota correta
-    fetch(`http://localhost:3200/api/usuarios/${id}`, {
-      method: 'DELETE'
-    })
-    .then(response => {
-      if (response.ok) {
-        alert('Usuário deletado com sucesso!');
-        window.location.reload(); // Recarrega a página para atualizar a tabela
-      } else {
-        alert('Erro ao deletar: O servidor rejeitou a exclusão.');
+          });
       }
-    })
-    .catch(error => {
-      console.error('Erro na requisição de exclusão:', error);
-      alert('Erro de conexão com o servidor.');
+    }
+    // FUNÇÃO PARA ALTERNAR ENTRE AS ABAS (IMÓVEIS, USUÁRIOS, CONFIGURAÇÕES)
+// ==========================================
+    // FUNÇÃO DE NAVEGAÇÃO ENTRE ABAS DO PAINEL (CORRIGIDA)
+    // ==========================================
+    function showSection(sectionName) {
+      // 1. Esconde todos os blocos de conteúdo adicionando o sufixo -section
+      const secoes = ['imoveis', 'usuarios', 'configuracoes'];
+      secoes.forEach(secao => {
+        const elemento = document.getElementById(`${secao}-section`);
+        if (elemento) {
+          elemento.style.display = 'none';
+        }
+      });
+
+      // 2. Mostra apenas a seção correta que foi clicada
+      const secaoAtiva = document.getElementById(`${sectionName}-section`);
+      if (secaoAtiva) {
+        secaoAtiva.style.display = 'block';
+      } else {
+        console.error("Não foi possível encontrar a tela:", `${sectionName}-section`);
+      }
+
+      // 3. Altera o título dinâmico na barra superior
+      const mapaTitulos = {
+        'imoveis': 'Gerenciar Imóveis',
+        'usuarios': 'Gerenciar Usuários',
+        'configuracoes': 'Configurações do Sistema'
+      };
+      const pageTitle = document.getElementById('pageTitle');
+      if (pageTitle && mapaTitulos[sectionName]) {
+        pageTitle.textContent = mapaTitulos[sectionName];
+      }
+
+      // 4. Atualiza o efeito visual de botão selecionado no menu lateral
+      const links = document.querySelectorAll('.sidebar-nav a');
+      links.forEach(link => {
+        link.classList.remove('active');
+      });
+
+      // Localiza o botão clicado através do seu evento onclick e ativa o visual dele
+      const clickedLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+      if (clickedLink) {
+        clickedLink.classList.add('active');
+      }
+    }
+
+    // Garante que assim que a página terminar de carregar, ela abra direto nos Imóveis
+    document.addEventListener("DOMContentLoaded", () => {
+      showSection('imoveis');
     });
-    
-  }
-}
 
-  function viewUser(id) {
-    alert('Visualizando detalhes do usuário ' + id);
-  }
+// Garante que a página comece mostrando os Imóveis por padrão
+document.addEventListener("DOMContentLoaded", () => {
+    showTab('imoveis'); 
+});
 
-  async function handleSubmitImovel(event) {
+    async function handleSubmitImovel(event) {
   event.preventDefault();
 
   const form = document.getElementById('imovelForm');
   const data = new FormData(form);
 
+  const localizacaoCompleta = data.get('localizacao') || '';
+  
+  let bairro = "Centro";
+  let cidade = "Itajobi";
+  let estado = "SP";
+
+  if (localizacaoCompleta.includes(',')) {
+    const partes = localizacaoCompleta.split(',');
+    bairro = partes[0].trim();
+    if (partes[1] && partes[1].includes('-')) {
+      const subPartes = partes[1].split('-');
+      cidade = subPartes[0].trim();
+      estado = subPartes[1].trim();
+    }
+  }
+
+  // --- HIGIENIZAÇÃO RIGOROSA DO PREÇO ---
+  let precoRaw = data.get('preco') || '0';
+  // Remove "R$", espaços, pontos de milhar e troca a vírgula decimal por ponto
+  let precoLimpo = precoRaw
+    .replace(/R\$/g, '') 
+    .replace(/\s/g, '')  
+    .replace(/\./g, '')  // Remove pontos de milhar (Ex: 350.000 -> 350000)
+    .replace(',', '.');  // Troca a vírgula decimal por ponto (Ex: 50,75 -> 50.75)
+  
+  const precoFinal = parseFloat(precoLimpo) || 0;
+
   const imovel = {
-    usuario_id: 1, // TEMPORÁRIO (depois vem do login)
+    usuario_id: 9, // ID do Admin no banco Neon
     referencia: "REF-" + Date.now(),
-
-    tipo_negocio: mapTipoNegocio(data.get('status')),
-    tipo_imovel: mapTipoImovel(data.get('tipo')),
-
-    titulo: data.get('titulo'),
-    descricao: data.get('descricao'),
-
-    preco: parseFloat(data.get('preco').replace(/[^\d,]/g, '').replace(',', '.')),
-
-    endereco: data.get('localizacao'),
-
-    quartos: parseInt(data.get('quartos') || 0),
-    banheiros: parseInt(data.get('banheiros') || 0),
-    vagas: parseInt(data.get('vagas') || 0),
-    area_m2: parseFloat(data.get('area') || 0),
-
-    ativo: 1
+    
+    tipo_negocio: data.get('status') || 'Venda', 
+    tipo_imovel: data.get('tipo') || 'Casa',     
+    
+    titulo: data.get('titulo') ? data.get('titulo').trim() : "Sem título",
+    descricao: data.get('descricao') ? data.get('descricao').trim() : '',
+    preco: precoFinal, // Passa o número purificado
+    
+    endereco: localizacaoCompleta.trim(),
+    bairro: bairro,
+    cidade: cidade,
+    estado: estado,
+    link_mapa: '', 
+    
+    quartos: parseInt(data.get('quartos')) || 0,
+    banheiros: parseInt(data.get('banheiros')) || 0,
+    vagas: parseInt(data.get('vagas')) || 0,
+    area_m2: parseFloat(data.get('area')) || 0,
+    
+    destaque: false, 
+    ativo: true      
   };
 
+  console.log("Objeto limpo enviado para a API:", imovel);
+
   try {
-    const resposta = await fetch("http://localhost:3200/api/imoveis", {
+    const token = localStorage.getItem('token'); 
+
+    const resposta = await fetch(`${API_URL}/imoveis`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` 
       },
       body: JSON.stringify(imovel)
     });
 
-    const resultado = await resposta.json();
-    console.log(resultado);
-
-    alert("Imóvel salvo com sucesso!");
-    closeModal();
-
+    if (resposta.ok) {
+        alert("Imóvel salvo com sucesso!");
+        closeModal();
+        carregarImoveis(); 
+    } else {
+        const dadosErro = await resposta.json().catch(() => ({}));
+        console.error("Detalhes do erro no servidor:", dadosErro);
+        alert(`O servidor recusou salvar o imóvel. Erro: ${dadosErro.erro || resposta.statusText}`);
+    }
   } catch (erro) {
-    console.error("Erro ao salvar imóvel:", erro);
-    alert("Erro ao salvar imóvel");
+    console.error("Erro na conexão ao salvar imóvel:", erro);
+    alert("Erro de rede ao salvar imóvel.");
   }
 }
 
-function capitalize(str) {
-  if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
-  function saveSettings() {
-    alert('Configurações salvas com sucesso!');
-  }
+    // ==========================================
+    // PASSO 5: SISTEMA DE USUÁRIOS (GERENCIAMENTO)
+    // ==========================================
+    async function carregarUsuarios() {
+      try {
+        const resposta = await fetch(`${API_URL}/usuarios`);
+        const usuarios = await resposta.json();
 
+        console.log("USUÁRIOS:", usuarios);
 
-  function logout() {
-    if (confirm('Tem certeza que deseja sair?')) {
-      window.location.href = 'login.html';
-    }
-  }
+        const tbody = document.getElementById("usuariosTable");
+        if (!tbody) return;
 
-  // Close modal when clicking outside
-  document.getElementById('addModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      closeModal();
-    }
-  });
-  async function carregarImoveis() {
-    try {
+        tbody.innerHTML = "";
 
-        const resposta = await fetch("http://localhost:3200/api/imoveis");
+        usuarios.forEach(usuario => {
+          const tr = document.createElement("tr");
+          const dataFormatada = usuario.criado_em
+            ? new Date(usuario.criado_em).toLocaleDateString('pt-BR')
+            : "-";
 
-        const imoveis = await resposta.json();
+          const perfilUsuario = usuario.adm === true || usuario.adm === 1
+            ? "Administrador"
+            : (usuario.tipo_interesse || "Cliente");
 
-       
-
-    } catch (erro) {
-        console.error(erro);
-    }
-}
-async function carregarImoveis() {
-  try {
-    const resposta = await fetch("http://localhost:3200/api/imoveis");
-    const imoveis = await resposta.json();
-
-    console.log("IMÓVEIS:", imoveis);
-
-    const tbody = document.getElementById("imoveisTable");
-
-    if (!tbody) {
-      console.error("tbody imoveisTable não encontrado");
-      return;
+          tr.innerHTML = `
+            <td>${usuario.nome || "-"}</td>
+            <td>${usuario.email || "-"}</td>
+            <td>${perfilUsuario}</td>
+            <td>${dataFormatada}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-delete" onclick="deleteUser(${usuario.id})">Deletar</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar usuários:", erro);
+      }
     }
 
-    tbody.innerHTML = "";
+    function deleteUser(id) {
+      if (confirm('Tem certeza que deseja deletar este usuário?')) {
+        fetch(`${API_URL}/usuarios/${id}`, { method: 'DELETE' })
+          .then(response => {
+            if (response.ok) {
+              alert('Usuário deletado com sucesso!');
+              carregarUsuarios();
+            } else {
+              alert('Erro ao deletar: O servidor rejeitou a exclusão.');
+            }
+          })
+          .catch(error => {
+            console.error('Erro na requisição de exclusão:', error);
+            alert('Erro de conexão com o servidor.');
+          });
+      }
+    }
 
-    imoveis.forEach(imovel => {
-      const tr = document.createElement("tr");
 
-      tr.innerHTML = `
-        <td>${imovel.titulo}</td>
-        <td>${imovel.tipo_imovel}</td>
-        <td>${imovel.endereco || "-"}</td>
-        <td>R$ ${imovel.preco || 0}</td>
-        <td>${imovel.tipo_negocio}</td>
-        <td>
-          <button onclick="deleteImovel(${imovel.id})">Excluir</button>
-        </td>
-      `;
+    // ==========================================
+    // PASSO 6: UTILITÁRIOS ADICIONAIS E EVENTOS
+    // ==========================================
+    function mapTipoImovel(tipo) {
+      const map = { casa: "Casa", apartamento: "Apartamento", terreno: "Terreno", comercio: "Comercial" };
+      return map[tipo] || tipo;
+    }
 
-      tbody.appendChild(tr);
+    function mapTipoNegocio(status) {
+      const map = { venda: "Venda", aluguel: "Aluguel" };
+      return map[status] || status;
+    }
+
+    function logout() {
+      if (confirm('Tem certeza que deseja sair?')) {
+        localStorage.removeItem('token'); // Limpa a sessão
+        window.location.href = '/login';
+      }
+    }
+
+    // Fecha modal clicando fora dele
+    document.getElementById('addModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
     });
-
-  } catch (erro) {
-    console.error("Erro ao carregar imóveis:", erro);
-  }
-}
-
-
-
- carregarImoveis();
-function mapTipoImovel(tipo) {
-  const map = {
-    casa: "Casa",
-    apartamento: "Apartamento",
-    terreno: "Terreno",
-    comercio: "Comercial"
-  };
- 
-  return map[tipo] || tipo;
-} 
-function mapTipoNegocio(status) {
-  const map = {
-    venda: "Venda",
-    aluguel: "Aluguel"
-  };
-
-  return map[status] || status;
-}
-carregarImoveis();
-// 1. FUNÇÃO PARA CARREGAR OS USUÁRIOS DO BANCO DE DADOS
-async function carregarUsuarios() {
-  try {
-    const resposta = await fetch("http://localhost:3200/api/usuarios");
-    const usuarios = await resposta.json();
-
-    console.log("USUÁRIOS:", usuarios);
-
-    const tbody = document.getElementById("usuariosTable");
-    if (!tbody) return;
-
-    tbody.innerHTML = ""; // Garante que a tabela comece limpa
-
-    // Este é o loop que vai criar linha por linha na sua tabela
-    usuarios.forEach(usuario => {
-      const tr = document.createElement("tr");
-
-      // Formata a data para o formato brasileiro
-      const dataFormatada = usuario.data_cadastro 
-        ? new Date(usuario.data_cadastro).toLocaleDateString('pt-BR') 
-        : "-";
-
-      tr.innerHTML = `
-        <td>${usuario.nome}</td>
-        <td>${usuario.email}</td>
-        <td>${mapTipoUsuario(usuario.tipo)}</td>
-        <td>${dataFormatada}</td>
-        <td>
-          <div class="action-buttons">
-          
-            <button class="btn-delete" onclick="deleteUser(${usuario.id})">Deletar</button>
-          </div>
-        </td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-
-  } catch (erro) {
-    console.error("Erro ao carregar usuários:", erro);
-  }
-}
-
-// 2. FUNÇÃO PARA PADRONIZAR O TEXTO DO TIPO
-function mapTipoUsuario(tipo) {
-  if (!tipo) return "-";
-  const map = {
-    comprador: "Comprador",
-    vendedor: "Vendedor",
-    admin: "Administrador"
-  };
-  return map[tipo.toLowerCase()] || tipo;
-}
-
-// 3. EXECUTA A FUNÇÃO ASSIM QUE A PÁGINA É ABERTA
-carregarUsuarios();
-
-</script>
+  </script>
 </body>
+
 </html>

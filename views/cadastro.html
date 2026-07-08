@@ -360,7 +360,7 @@
 <!-- NAVBAR -->
 <nav>
   <div class="nav-inner">
-    <a href="index.html" class="logo">
+    <a href="/Pagina_inicial" class="logo">
       <div class="logo-icon"><img src="logo.png" alt="IBV Logo"></div>
       <div class="logo-text">
         <strong>Bela Vista</strong>
@@ -368,8 +368,8 @@
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html">Início</a></li>
-      <li><a href="index.html#imoveis">Imóveis</a></li>
+      <li><a href="/Pagina_inicial">Início</a></li>
+      <li><a href="/Pagina_inicial#imoveis">Imóveis</a></li>
     </ul>
     <div class="nav-actions">
       <button class="theme-toggle" id="themeToggle" title="Alternar modo claro/escuro" aria-label="Alternar tema">
@@ -378,7 +378,7 @@
           <span>☀️</span>
         </span>
       </button>
-      <a href="login.html" class="btn-cta">Login</a>
+      <a href="/login" class="btn-cta">Login</a>
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -500,7 +500,7 @@
   hamburger.addEventListener('click', () => {
     mobileMenu.classList.toggle('open');
   });
-async function handleSubmit(event) {
+  async function handleSubmit(event) {
   event.preventDefault();
 
   const nome =
@@ -520,30 +520,39 @@ async function handleSubmit(event) {
 
   try {
     const resposta = await fetch(
-      'https://projeto-integrador-1-h022.onrender.com/auth/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          nome,
-          email,
-          senha,
-          telefone,
-          tipo_interesse
-        })
-      }
-    );
+  'https://projeto-integrador-1-h022.onrender.com/api/auth/register',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nome,
+      email,
+      senha,
+      telefone,
+      tipo_interesse
+    })
+  }
+);
 
+    // --- CORREÇÃO DO ERRO DO F12 ---
+    // Verifica se o servidor retornou HTML em vez de JSON
+    const contentType = resposta.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      // Se não for JSON, lê como texto para sabermos o que o Render respondeu
+      const textoErro = await resposta.text();
+      console.error("Resposta do servidor não é JSON:", textoErro);
+      alert(`Erro no servidor. O servidor respondeu um HTML (Código: ${resposta.status}). Verifique a rota no backend.`);
+      return; // Interrompe a execução para não quebrar no .json()
+    }
+
+    // Se chegou aqui, é um JSON válido!
     const dados = await resposta.json();
 
     if (resposta.ok) {
-      // Se deu certo, tenta usar 'mensagem' ou avisa o sucesso
       alert(dados.mensagem || dados.message || 'Cadastro realizado com sucesso!');
     } else {
-      // Se deu erro, verifica várias propriedades comuns de erro do back-end
-      // Se nenhuma existir, mostra uma mensagem padrão junto com o código do erro (ex: 400 ou 500)
       const mensagemErro = dados.erro || dados.mensagem || dados.message || dados.error;
       alert(mensagemErro || `Erro no servidor (Código: ${resposta.status})`);
     }
@@ -552,7 +561,6 @@ async function handleSubmit(event) {
     console.error(erro);
     alert('Erro ao conectar com o servidor. Verifique sua internet.');
   }
-
 }
    
 
