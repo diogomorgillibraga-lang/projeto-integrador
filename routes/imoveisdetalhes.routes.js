@@ -1,10 +1,13 @@
 import express from "express";
 const router = express.Router();
 
-// Importa a função específica do seu controller de imóveis
-import { buscarImovelPorId } from "../controllers/imoveis.controller.js";
+// Importamos tanto a lista quanto a busca por ID do seu controller existente
+import { listarImoveis, buscarImovelPorId } from "../controllers/imoveis.controller.js";
 
-// Cria a rota que vai receber o ID dinâmico
+// Rota para a página inicial carregar todos os cards
+router.get("/api/imoveis", listarImoveis);
+
+// Rota para carregar o imóvel específico
 router.get("/api/imoveis/:id", buscarImovelPorId);
 
 export default router;

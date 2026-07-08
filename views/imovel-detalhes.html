@@ -615,6 +615,46 @@
   document.getElementById('hamburger').addEventListener('click', () => {
     document.getElementById('mobileMenu').classList.toggle('open');
   });
+  
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Pega o ID que está na URL do navegador (ex: ?id=1)
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    if (!id) {
+      alert("Imóvel não especificado.");
+      return;
+    }
+
+    try {
+      // 2. Busca os dados reais lá no seu controller do Node
+      const response = await fetch(`/api/imoveis/${id}`);
+      if (!response.ok) throw new Error("Erro ao buscar dados do imóvel");
+      
+      const imovel = await response.json();
+
+      // 3. Substitua os IDs abaixo pelos IDs ou classes reais do seu HTML de detalhes
+      // Exemplo de preenchimento dinâmico:
+      if (document.getElementById("titulo-imovel")) {
+        document.getElementById("titulo-imovel").innerText = imovel.titulo;
+      }
+      if (document.getElementById("preco-imovel")) {
+        document.getElementById("preco-imovel").innerText = `R$ ${imovel.preco}`;
+      }
+      if (document.getElementById("descricao-imovel")) {
+        document.getElementById("descricao-imovel").innerText = imovel.descricao;
+      }
+      if (document.getElementById("bairro-imovel")) {
+        document.getElementById("bairro-imovel").innerText = `📍 ${imovel.bairro}, ${imovel.cidade} - ${imovel.estado}`;
+      }
+      
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Não foi possível carregar as informações deste imóvel.");
+    }
+  });
 </script>
 </body>
 </html>

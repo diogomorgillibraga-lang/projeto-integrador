@@ -619,115 +619,10 @@
         </div>
       </div>
 
-      <!-- ── CARD 2: Terreno na Vila Nova (R$ 93.000) ── -->
-      <div class="card-imovel" data-tipo="venda terreno">
-        <div class="card-img">
-          <img src="terreno-vila-nova.jpg" alt="Terreno Vila Nova - Itajobi">
-          <span class="card-badge badge-venda">Venda</span>
-          <span class="card-tag">Terreno</span>
-        </div>
-        <div class="card-body">
-          <div class="card-title">Terreno na Vila Nova - 300m²</div>
-          <div class="card-location">📍 Vila Nova, Itajobi - SP</div>
-          <div class="card-features">
-            <span class="card-feat">📐 300 m²</span>
-            <span class="card-feat">📏 Esquina</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-price">R$ 93.000<span>à vista ou financiado</span></div>
-            <a href="imovel-detalhes.html?id=2" class="btn-ver">Ver mais</a>
-          </div>
-        </div>
+      <!-- Substitua TODOS os cards por este container único -->
+      <div id="container-imoveis" class="lista-imoveis-grid">
+        <!-- Os cards do banco Neon serão injetados aqui dinamicamente pelo JavaScript -->
       </div>
-
-      <!-- ── CARD 3: Casa no Jardim São Paulo (R$ 250.000) ── -->
-      <div class="card-imovel" data-tipo="venda casa">
-        <div class="card-img">
-          <img src="casa-jardim-sp.jpg" alt="Casa Jardim São Paulo - Itajobi">
-          <span class="card-badge badge-venda">Venda</span>
-          <span class="card-tag">Casa</span>
-        </div>
-        <div class="card-body">
-          <div class="card-title">Casa no Jardim São Paulo</div>
-          <div class="card-location">📍 Jd. São Paulo, Itajobi - SP</div>
-          <div class="card-features">
-            <span class="card-feat">🏠 2 quartos</span>
-            <span class="card-feat">🚿 1 banheiro</span>
-            <span class="card-feat">🚗 1 vaga</span>
-            <span class="card-feat">📐 120 m²</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-price">R$ 250.000<span>à vista ou financiado</span></div>
-            <a href="imovel-detalhes.html?id=3" class="btn-ver">Ver mais</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── CARD 4: Casa para Alugar (R$ 1.700/mês) ── -->
-      <div class="card-imovel" data-tipo="aluguel casa">
-        <div class="card-img">
-          <img src="chacara-luxo.jpg" alt="Casa para Alugar - Itajobi">
-          <span class="card-badge badge-aluguel">Aluguel</span>
-          <span class="card-tag">Casa</span>
-        </div>
-        <div class="card-body">
-          <div class="card-title">Casa para Alugar - 3 Quartos</div>
-          <div class="card-location">📍 Jardim das Flores, Itajobi - SP</div>
-          <div class="card-features">
-            <span class="card-feat">🏠 3 quartos</span>
-            <span class="card-feat">🚿 2 banheiros</span>
-            <span class="card-feat">🚗 1 vaga</span>
-            <span class="card-feat">📐 130 m²</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-price">R$ 1.700<span>/mês</span></div>
-            <a href="imovel-detalhes.html?id=4" class="btn-ver">Ver mais</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── CARD 5: Chácara de Luxo (R$ 1.300.000) ── -->
-      <div class="card-imovel" data-tipo="venda casa">
-        <div class="card-img">
-          <img src="comercial-centro.jpg" alt="Chácara de Luxo - Itajobi">
-          <span class="card-badge badge-venda">Venda</span>
-          <span class="card-tag">Chácara</span>
-        </div>
-        <div class="card-body">
-          <div class="card-title">Chácara de Luxo com Piscina</div>
-          <div class="card-location">📍 Zona Rural, Itajobi - SP</div>
-          <div class="card-features">
-            <span class="card-feat">🏠 4 quartos</span>
-            <span class="card-feat">🚿 3 banheiros</span>
-            <span class="card-feat">🏊 Piscina</span>
-            <span class="card-feat">📐 5.000 m²</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-price">R$ 1.300.000<span>negociável</span></div>
-            <a href="imovel-detalhes.html?id=5" class="btn-ver">Ver mais</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── CARD 6: Imóvel Comercial (Consulte) ── -->
-      <div class="card-imovel" data-tipo="venda comercial">
-        <div class="card-img">
-          <img src="ponto-centro.jpg" alt="Imóvel Comercial - Centro">
-          <span class="card-badge badge-venda">Venda</span>
-          <span class="card-tag">Comercial</span>
-        </div>
-        <div class="card-body">
-          <div class="card-title">Ponto Comercial no Centro</div>
-          <div class="card-location">📍 Centro, Itajobi - SP</div>
-          <div class="card-features">
-            <span class="card-feat">🏢 2 salas</span>
-            <span class="card-feat">🚿 1 banheiro</span>
-            <span class="card-feat">📐 80 m²</span>
-            <span class="card-feat">📍 Vitrine</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-price">Consulte<span>preço sob consulta</span></div>
-            <a href="imovel-detalhes.html?id=6" class="btn-ver">Ver mais</a>
           </div>
         </div>
       </div>
@@ -794,6 +689,50 @@
       card.style.display = (tipo === 'todos' || tipoCard.includes(tipo)) ? 'block' : 'none';
     });
   }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      // 1. Busca a lista completa de imóveis que você já programou no backend
+      const response = await fetch('/api/imoveis'); 
+      const imoveis = await response.json();
+
+      const container = document.getElementById("container-imoveis");
+      container.innerHTML = ""; // Limpa qualquer resquício
+
+      // 2. Passa por cada imóvel do banco Neon e monta o card dinamicamente
+      imoveis.forEach(imovel => {
+        const card = document.createElement("div");
+        card.className = "card-imovel";
+        card.setAttribute("data-tipo", `${imovel.tipo_negocio} ${imovel.tipo_imovel}`.toLowerCase());
+
+        card.innerHTML = `
+          <div class="card-img">
+            <img src="${imovel.referencia || 'casa-centro.jpg'}" alt="${imovel.titulo}">
+            <span class="card-badge badge-${imovel.tipo_negocio === 'Aluguel' ? 'aluguel' : 'venda'}">${imovel.tipo_negocio}</span>
+            <span class="card-tag">${imovel.tipo_imovel}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${imovel.titulo}</div>
+            <div class="card-location">📍 ${imovel.bairro}, ${imovel.cidade} - ${imovel.estado}</div>
+            <div class="card-features">
+              <span class="card-feat">🏠 ${imovel.quartos || 0} quartos</span>
+              <span class="card-feat">🚿 ${imovel.banheiros || 0} banheiro</span>
+              <span class="card-feat">📐 ${imovel.area_m2 || 0} m²</span>
+            </div>
+            <div class="card-footer">
+              <div class="card-price">R$ ${imovel.preco}</div>
+              <!-- O ID dinâmico do banco Neon é inserido bem aqui na URL -->
+              <a href="imovel-detalhes.html?id=${imovel.id}" class="btn-ver">Ver mais</a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    } catch (error) {
+      console.error("Erro ao carregar a lista de imóveis:", error);
+    }
+  });
 </script>
 </body>
 </html>
